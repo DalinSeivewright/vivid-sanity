@@ -1,0 +1,38 @@
+
+plugins {
+    id "org.springframework.boot"
+    id "java"
+}
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+    compileOnly 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+bootJar {
+    archiveName="${rootProject.name}-application.jar"
+    from ("../${rootProject.name}-ui/dist") {
+        into 'static'
+        exclude "3rdpartylicenses.txt"
+    }
+}
+
+task yarnIt(type: Exec) {
+    println "${rootProject.name}"
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        workingDir "${project.rootDir}/${rootProject.name}-ui"
+        commandLine "cmd", "/c", "yarn build"
+
+    } else {
+        workingDir "${project.rootDir}\\${rootProject.name}-ui"
+        commandLine 'yarn build'
+    }
+}
+
+bootJar.dependsOn "yarnIt"
+
+

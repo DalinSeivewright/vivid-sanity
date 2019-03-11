@@ -1,0 +1,47 @@
+/out
+**/.gradle
+**/gradle
+**/build/
+**/!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+
+### IntelliJ IDEA ###
+**/.idea
+**/*.iws
+**/*.iml
+**/*.ipr
+**/out/
+**/.idea
+**/.project
+**/.classpath
+**/.c9/
+**/*.launch
+**/.settings/
+**/*.sublime-workspace
+
+
+### NetBeans ###
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
+
+
+# System Files
+**/.DS_Store
+**/Thumbs.db
+
+**/tmp
+**/out-tsc
+
+# dependencies
+**/node_modules
