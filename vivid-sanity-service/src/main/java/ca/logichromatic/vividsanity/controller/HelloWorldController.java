@@ -1,4 +1,4 @@
-package com.skeleton.server.controller;
+package ca.logichromatic.vividsanity.controller;
 
 
 import org.springframework.web.bind.annotation.GetMapping;

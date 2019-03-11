@@ -7,6 +7,6 @@ pluginManagement {
 }
 
 
-rootProject.name = 'server'
+rootProject.name = 'vivid-sanity'
 
 include "${rootProject.name}-service"
