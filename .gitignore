@@ -45,3 +45,6 @@
 
 # dependencies
 **/node_modules
+
+
+**/src/main/resources/application-local.properties
