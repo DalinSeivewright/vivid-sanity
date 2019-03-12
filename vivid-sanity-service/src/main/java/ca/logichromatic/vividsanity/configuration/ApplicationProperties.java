@@ -10,12 +10,18 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "vivid")
 public class ApplicationProperties {
 
-    private MinioProperties minio;
+    private MinioProperties minio = new MinioProperties();
+    private ImageProxyProperties imageProxy = new ImageProxyProperties();
 
     @Data
     public static class MinioProperties {
         private String uri;
         private String accessKey;
         private String secretKey;
+    }
+
+    @Data
+    public static class ImageProxyProperties {
+        private String zuulRouteId;
     }
 }
