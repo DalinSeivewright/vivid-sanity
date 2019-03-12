@@ -1,11 +1,10 @@
 package ca.logichromatic.vividsanity.service;
 
 
-import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentials;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentialsProvider;
+import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
-import ca.logichromatic.vividsanity.model.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,24 +13,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
-public class ImageService {
+public class ImageProxyService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    public List<ImageInfo> getImages() throws IOException {
+    public @ResponseBody byte[] getImage(String imageId) throws IOException {
         try {
             URI uri = URI.create(applicationProperties.getMinio().getUri());
             CustomAWSCredentials customAWSCredentials = CustomAWSCredentials.builder()
@@ -45,19 +38,16 @@ public class ImageService {
                     .build();
 
 
-            ListObjectsResponse imageListing  = s3Client.listObjects(ListObjectsRequest.builder().bucket("private").build());
-            Comparator<S3Object> s3ObjectComparator = Comparator.comparing(s3Object -> s3Object.lastModified(), Comparator.naturalOrder());
-            return imageListing.contents().stream().sorted(s3ObjectComparator).map(object -> toImageInfo(object)).collect(Collectors.toList());
-        } catch (NoSuchBucketException bucketException) {
-            log.error(bucketException.getMessage());
+            InputStream imageInputStream = s3Client.getObject(GetObjectRequest.builder().bucket("private").key(imageId).build(),
+                    ResponseTransformer.toInputStream());
+
+
+            return IOUtils.toByteArray(imageInputStream);
+        } catch (NoSuchKeyException keyException) {
             throw new ImageNotFoundException();
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ImageNotFoundException();
         }
-    }
-
-    private ImageInfo toImageInfo(S3Object object) {
-        return new ImageInfo().setImageUri("/i/" + object.key());
     }
 }

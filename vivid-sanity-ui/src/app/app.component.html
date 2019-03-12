@@ -2,8 +2,7 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <span *ngIf="imageData">
-    <img src="/api/image/ar326121.jpg">
-  </span>
+
+  <img *ngFor="let x of imageData" [src]="x.imageUri">
 </div>
 

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ImageService} from "./services/image.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {ImageInfoModel} from "./model/image-info.model";
 
 @Component({
   selector: 'app-root',
@@ -9,19 +10,14 @@ import {DomSanitizer} from "@angular/platform-browser";
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  imageData: any = null;
-  constructor(private imageService: ImageService,
-              private domSanitizer: DomSanitizer) {
+  imageData: ImageInfoModel[] = [];
+  constructor(private imageService: ImageService) {
 
   }
 
   public ngOnInit(): void {
-    this.imageService.getImage("ar326121.jpg").subscribe(response => {
+    this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
       this.imageData = response;
     })
-  }
-
-  get imageEncoded() {
-    return this.domSanitizer.bypassSecurityTrustUrl("data:image/png;base64," + this.imageData);
   }
 }
