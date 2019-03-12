@@ -7,10 +7,14 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 dependencies {
+    compile 'org.apache.commons:commons-lang3:3.8.1'
+    compile 'commons-io:commons-io:2.6'
+    compile 'software.amazon.awssdk:s3:2.5.5'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
     compileOnly 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+
 }
 
 bootJar {

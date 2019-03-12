@@ -2,6 +2,8 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <p>This is an API Response: "{{helloWorld}}"</p>
+  <span *ngIf="imageData">
+    <img [src]="imageEncoded">
+  </span>
 </div>
 

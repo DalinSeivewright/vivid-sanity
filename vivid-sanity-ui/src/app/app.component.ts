@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {HelloWorldService} from "./services/hello-world.service";
+import {ImageService} from "./services/image.service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-root',
@@ -8,16 +9,19 @@ import {HelloWorldService} from "./services/hello-world.service";
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  helloWorld: string = "(No Response Yet)"
-  constructor(private helloWorldService: HelloWorldService) {
+  imageData: any = null;
+  constructor(private imageService: ImageService,
+              private domSanitizer: DomSanitizer) {
 
   }
 
   public ngOnInit(): void {
-    this.helloWorldService.helloWorld().subscribe(response => {
-      console.log(response);
-      this.helloWorld = response;
+    this.imageService.getImage("ar326121.jpg").subscribe(response => {
+      this.imageData = response;
     })
   }
 
+  get imageEncoded() {
+    return this.domSanitizer.bypassSecurityTrustUrl("data:image/png;base64," + this.imageData);
+  }
 }
