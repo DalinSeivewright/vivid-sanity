@@ -1,7 +1,7 @@
-package ca.logichromatic.vividsanity.controller;
+package ca.logichromatic.vividsanity.controller.image;
 
 import ca.logichromatic.vividsanity.model.ImageInfo;
-import ca.logichromatic.vividsanity.service.ImageService;
+import ca.logichromatic.vividsanity.service.image.ImageServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +15,7 @@ import java.util.List;
 public class ImageController {
 
     @Autowired
-    private ImageService imageService;
+    private ImageServiceInterface imageService;
 
     @GetMapping()
     public List<ImageInfo> getImages() throws IOException {

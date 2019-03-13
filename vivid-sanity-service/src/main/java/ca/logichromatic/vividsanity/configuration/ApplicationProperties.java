@@ -1,7 +1,6 @@
 package ca.logichromatic.vividsanity.configuration;
 
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -10,11 +9,13 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "vivid")
 public class ApplicationProperties {
 
-    private MinioProperties minio;
+    private BucketProperties publicBucket = new BucketProperties();
+    private BucketProperties privateBucket = new BucketProperties();
 
     @Data
-    public static class MinioProperties {
+    public static class BucketProperties {
         private String uri;
+        private String bucketKey;
         private String accessKey;
         private String secretKey;
     }
