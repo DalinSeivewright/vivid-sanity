@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -24,4 +25,11 @@ public class PrivateImageService implements ImageServiceInterface {
         log.error("I am the private bean!");
         return imageOperationService.getImages(applicationProperties.getPrivateBucket());
     }
+
+    @Override
+    public ImageInfo uploadImage(InputStream fileStream, int byteSize) {
+        log.error("I am private upload bean");
+       return imageOperationService.uploadImage(applicationProperties.getPrivateBucket(), fileStream, byteSize);
+    }
+
 }

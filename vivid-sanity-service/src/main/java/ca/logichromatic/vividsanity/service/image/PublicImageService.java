@@ -2,12 +2,14 @@ package ca.logichromatic.vividsanity.service.image;
 
 
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
+import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -24,5 +26,12 @@ public class PublicImageService implements ImageServiceInterface {
         log.error("I am the public bean!");
         return imageOperationService.getImages(applicationProperties.getPublicBucket());
     }
+
+
+    @Override
+    public ImageInfo uploadImage(InputStream fileStream, int byteSize) {
+        throw new ImageNotFoundException(); // TODO Decide what exceptions we actually want
+    }
+
 
 }

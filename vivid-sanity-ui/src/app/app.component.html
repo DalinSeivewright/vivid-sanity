@@ -2,7 +2,10 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-
+  <div [formGroup]="formGroup">
+    <input type="file" formControlName="fileInput" (change)="selectFile($event)">
+    <button (click)="uploadFile()" >Upload</button>
+  </div>
   <img *ngFor="let x of imageData" [src]="x.imageUri">
 </div>
 

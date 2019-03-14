@@ -17,7 +17,7 @@ public class ImageProxyController {
 
     @ResponseBody
     @GetMapping(value = "/{imageId}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] getImage(@PathVariable String imageId) throws IOException {
+    public byte[] getImage(@PathVariable String imageId) {
         return imageProxyServiceInterface.getImage(imageId);
     }
 }
