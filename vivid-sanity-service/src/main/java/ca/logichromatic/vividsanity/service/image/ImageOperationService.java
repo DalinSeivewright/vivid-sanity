@@ -1,11 +1,13 @@
 package ca.logichromatic.vividsanity.service.image;
 
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
+import ca.logichromatic.vividsanity.controller.proxy.ImageProxyController;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentials;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentialsProvider;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfo;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
+import ca.logichromatic.vividsanity.util.SimpleSubPath;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -47,8 +49,12 @@ public class ImageOperationService {
                     .map(object -> toImageInfo(object))
                     .collect(Collectors.toList());
         } catch (NoSuchBucketException bucketException) {
+            bucketException.printStackTrace();
+
             log.error(bucketException.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
+
             log.error(e.getMessage());
         }
         return new ArrayList<>();
@@ -61,8 +67,11 @@ public class ImageOperationService {
             InputStream imageInputStream = getObjectAsInputStream(s3Client, bucketProperties.getBucketKey(), imageId);
             return IOUtils.toByteArray(imageInputStream);
         } catch (NoSuchKeyException keyException) {
+            keyException.printStackTrace();
             throw new ImageNotFoundException();
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e);
             log.error(e.getMessage());
             throw new ImageNotFoundException();
         }
@@ -73,6 +82,7 @@ public class ImageOperationService {
             S3Client s3Client = buildClient(bucketProperties);
             return uploadObject(s3Client, bucketProperties.getBucketKey(), inputStream, byteLength);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("error");
         }
         return null;
@@ -82,8 +92,16 @@ public class ImageOperationService {
         String newObjectId = generateUniqueId(s3Client, bucketKey);
         PutObjectRequest request = PutObjectRequest.builder().bucket(bucketKey).key(newObjectId).build();
         RequestBody requestBody = RequestBody.fromInputStream(inputStream, byteLength);
-        PutObjectResponse response = s3Client.putObject(request, requestBody);
-        return new ImageInfo().setImageUri("/i/" + newObjectId);
+        s3Client.putObject(request, requestBody);
+        return new ImageInfo().setImageUri(buildProxyPath(newObjectId));
+    }
+
+    private String buildProxyPath(String objectKey) {
+        return SimpleSubPath.builder()
+                .path(ImageProxyController.IMAGE_PROXY_ENDPOINT)
+                .path(objectKey)
+                .build()
+                .getPath();
     }
 
     private String generateUniqueId(S3Client s3Client, String bucketKey) {
@@ -129,7 +147,7 @@ public class ImageOperationService {
     }
 
     private ImageInfo toImageInfo(S3Object object) {
-        return new ImageInfo().setImageUri("/i/" + object.key());
+        return new ImageInfo().setImageUri(buildProxyPath(object.key()));
     }
 
 }

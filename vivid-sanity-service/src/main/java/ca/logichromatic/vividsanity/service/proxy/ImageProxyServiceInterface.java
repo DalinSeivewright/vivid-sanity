@@ -1,4 +1,4 @@
-package ca.logichromatic.vividsanity.service.image.proxy;
+package ca.logichromatic.vividsanity.service.proxy;
 
 
 public interface ImageProxyServiceInterface {

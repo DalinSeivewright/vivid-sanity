@@ -1,16 +1,15 @@
-package ca.logichromatic.vividsanity.controller.image.proxy;
+package ca.logichromatic.vividsanity.controller.proxy;
 
-import ca.logichromatic.vividsanity.service.image.proxy.ImageProxyServiceInterface;
-import ca.logichromatic.vividsanity.service.image.proxy.PublicImageProxyService;
+import ca.logichromatic.vividsanity.service.proxy.ImageProxyServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
-@RequestMapping("/i")
+@RequestMapping(ImageProxyController.IMAGE_PROXY_ENDPOINT)
 public class ImageProxyController {
+
+    public static final String IMAGE_PROXY_ENDPOINT = "/i";
 
     @Autowired
     private ImageProxyServiceInterface imageProxyServiceInterface;
