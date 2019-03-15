@@ -3,6 +3,9 @@ import {ImageService} from "./services/image.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {ImageInfoModel} from "./model/image-info.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
+import {ServerModeType} from "./model/server-mode.type";
+import {AppInfoModel} from "./model/app-info.model";
+import {AppInfoService} from "./services/app-info.service";
 
 @Component({
   selector: 'app-root',
@@ -14,7 +17,9 @@ export class AppComponent implements OnInit {
   formGroup: FormGroup = null;
   file: File = null;
   imageData: ImageInfoModel[] = [];
+  serverMode: ServerModeType = null;
   constructor(private imageService: ImageService,
+               private appInfoService: AppInfoService,
                private formBuilder: FormBuilder) {
 
   }
@@ -28,6 +33,13 @@ export class AppComponent implements OnInit {
     this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
       this.imageData = response;
     })
+
+    this.appInfoService.getInfo().subscribe((response: AppInfoModel) => {
+      if (response) {
+        this.serverMode = response.serverMode;
+      }
+    })
+
   }
 
   uploadFile() {
@@ -38,5 +50,10 @@ export class AppComponent implements OnInit {
 
   selectFile(event) {
     this.file = event.target.files[0];
+  }
+
+  get privateMode(): boolean {
+    console.log(this.serverMode === ServerModeType.PRIVATE);
+    return this.serverMode === ServerModeType.PRIVATE;
   }
 }

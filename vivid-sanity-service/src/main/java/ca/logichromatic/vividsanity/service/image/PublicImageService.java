@@ -6,7 +6,7 @@ import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Profile("public")
+@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "public")
 public class PublicImageService implements ImageServiceInterface {
     @Autowired
     private ApplicationProperties applicationProperties;
