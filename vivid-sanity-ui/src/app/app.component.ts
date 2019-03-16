@@ -52,8 +52,8 @@ export class AppComponent implements OnInit {
     this.file = event.target.files[0];
   }
 
-  get privateMode(): boolean {
-    console.log(this.serverMode === ServerModeType.PRIVATE);
-    return this.serverMode === ServerModeType.PRIVATE;
+  get localMode(): boolean {
+    console.log(this.serverMode === ServerModeType.LOCAL);
+    return this.serverMode === ServerModeType.LOCAL;
   }
 }

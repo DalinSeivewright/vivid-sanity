@@ -48,5 +48,8 @@
 
 
 **/src/main/resources/application-local.properties
+**/src/main/resources/application-external.properties
+**/src/main/resources/liquibase-local.properties
+**/src/main/resources/liquibase-external.properties
 **/src/main/resources/application-public.properties
 **/src/main/resources/application-private.properties

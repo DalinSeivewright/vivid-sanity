@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "public")
+@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "external")
 public class PublicImageProxyService implements ImageProxyServiceInterface {
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -19,6 +19,6 @@ public class PublicImageProxyService implements ImageProxyServiceInterface {
     private ImageOperationService imageOperationService;
 
     public byte[] getImage(String imageId){
-        return imageOperationService.getImage(applicationProperties.getPublicBucket(), imageId);
+        return imageOperationService.getImage(applicationProperties.getExternal().getBucket(), imageId);
     }
 }

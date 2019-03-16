@@ -1,11 +1,11 @@
 package ca.logichromatic.vividsanity.service.image;
 
-import ca.logichromatic.vividsanity.model.ImageInfo;
+import ca.logichromatic.vividsanity.model.ImageInfoDto;
 
 import java.io.InputStream;
 import java.util.List;
 
 public interface ImageServiceInterface {
-    List<ImageInfo> getImages();
-    ImageInfo uploadImage(InputStream fileStream, int byteSize);
+    List<ImageInfoDto> getImages();
+    ImageInfoDto uploadImage(InputStream fileStream, int byteSize);
 }

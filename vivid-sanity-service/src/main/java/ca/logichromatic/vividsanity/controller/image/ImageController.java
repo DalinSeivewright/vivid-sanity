@@ -1,6 +1,6 @@
 package ca.logichromatic.vividsanity.controller.image;
 
-import ca.logichromatic.vividsanity.model.ImageInfo;
+import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.service.image.ImageServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +17,12 @@ public class ImageController {
     private ImageServiceInterface imageService;
 
     @GetMapping()
-    public List<ImageInfo> getImages() throws IOException {
+    public List<ImageInfoDto> getImages() throws IOException {
         return imageService.getImages();
     }
 
     @PostMapping
-    public ImageInfo uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
+    public ImageInfoDto uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         return imageService.uploadImage(file.getInputStream(), file.getBytes().length);
     }
 }

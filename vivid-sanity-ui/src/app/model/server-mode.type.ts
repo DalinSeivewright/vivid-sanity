@@ -1,4 +1,4 @@
 export enum ServerModeType {
-    PRIVATE = "PRIVATE",
-    PUBLIC = "PUBLIC"
+    LOCAL = "LOCAL",
+    EXTERNAL = "EXTERNAL"
 }

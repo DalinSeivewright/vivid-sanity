@@ -7,7 +7,8 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class ImageInfo {
+public class ImageInfoDto {
+    private String imageKey;
     private String imageUri;
     private String thumbnailUri;
     private String description;

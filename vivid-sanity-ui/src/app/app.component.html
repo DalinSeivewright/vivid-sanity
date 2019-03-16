@@ -2,7 +2,7 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <div [formGroup]="formGroup" *ngIf="privateMode">
+  <div [formGroup]="formGroup" *ngIf="localMode">
     <input type="file" formControlName="fileInput" (change)="selectFile($event)">
     <button (click)="uploadFile()" >Upload</button>
   </div>

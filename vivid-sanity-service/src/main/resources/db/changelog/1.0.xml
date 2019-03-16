@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="tag-1.0" author="logic">
+        <tagDatabase tag="1.0"/>
+    </changeSet>
+
+    <changeSet id="1.0-create-image-info-table" author="logic">
+        <createTable tableName="IMAGE_INFO">
+            <column name="IMAGE_ID" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IMAGE_KEY" type="varchar(36)"/>
+            <column name="DESCRIPTION" type="varchar(2500)"/>
+            <column name="VISIBILITY" type="varchar(36)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0-create-image-info-unique-index" author="">
+        <createIndex tableName="IMAGE_INFO" indexName="UI_IMAGE_KEY" unique="true">
+            <column name="IMAGE_KEY"></column>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="1.0-create-image-tag-table" author="logic">
+        <createTable tableName="IMAGE_TAG">
+            <column name="IMAGE_TAG_ID" type="varchar(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="IMAGE_ID" type="varchar(36)"/>
+            <column name="TAG" type="varchar(36)"/>
+            <column name="DESCRIPTION" type="varchar(2500)"/>
+        </createTable>
+    </changeSet>
+
+
+
+</databaseChangeLog>

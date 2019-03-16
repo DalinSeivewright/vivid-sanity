@@ -3,7 +3,7 @@ package ca.logichromatic.vividsanity.service.image;
 
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
-import ca.logichromatic.vividsanity.model.ImageInfo;
+import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "public")
+@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "external")
 public class PublicImageService implements ImageServiceInterface {
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -22,14 +22,14 @@ public class PublicImageService implements ImageServiceInterface {
     @Autowired
     private ImageOperationService imageOperationService;
 
-    public List<ImageInfo> getImages() {
+    public List<ImageInfoDto> getImages() {
         log.error("I am the public bean!");
-        return imageOperationService.getImages(applicationProperties.getPublicBucket());
+        return imageOperationService.getImages(applicationProperties.getExternal().getBucket());
     }
 
 
     @Override
-    public ImageInfo uploadImage(InputStream fileStream, int byteSize) {
+    public ImageInfoDto uploadImage(InputStream fileStream, int byteSize) {
         throw new ImageNotFoundException(); // TODO Decide what exceptions we actually want
     }
 

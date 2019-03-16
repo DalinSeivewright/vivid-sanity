@@ -6,6 +6,6 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AppInfo {
+public class AppInfoDto {
     private ServerMode serverMode;
 }

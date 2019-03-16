@@ -1,6 +1,6 @@
 package ca.logichromatic.vividsanity.controller.application;
 
-import ca.logichromatic.vividsanity.model.AppInfo;
+import ca.logichromatic.vividsanity.model.AppInfoDto;
 import ca.logichromatic.vividsanity.service.application.AppInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ public class AppInfoController {
     private AppInfoService appInfoService;
 
     @GetMapping()
-    public AppInfo getInfo() {
+    public AppInfoDto getInfo() {
         return appInfoService.getInfo();
     }
 }

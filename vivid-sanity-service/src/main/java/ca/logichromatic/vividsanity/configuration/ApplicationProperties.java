@@ -10,8 +10,14 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "vivid")
 public class ApplicationProperties {
     private ServerMode serverMode;
-    private BucketProperties publicBucket = new BucketProperties();
-    private BucketProperties privateBucket = new BucketProperties();
+    private SpecificProperties local;
+    private SpecificProperties external;
+
+
+    @Data
+    public static class SpecificProperties {
+        private BucketProperties bucket;
+    }
 
     @Data
     public static class BucketProperties {
