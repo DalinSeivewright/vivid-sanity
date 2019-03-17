@@ -16,10 +16,10 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class ImageInfoDbService {
-    @Autowired(required = false)
+    @Autowired
     private LocalImageInfoRepository localImageInfoRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private ExternalImageInfoRepository externalImageInfoRepository;
 
     public ImageInfo save(ImageInfo imageInfo) {

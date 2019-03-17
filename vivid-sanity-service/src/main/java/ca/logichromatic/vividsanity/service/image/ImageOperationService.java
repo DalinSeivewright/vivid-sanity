@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 public class ImageOperationService {
     public static final int MAX_UNIQUE_ID_GENERATE_ATTEMPTS = 5;
 
-    @Autowired(required = false)
+    @Autowired
     private LocalImageInfoRepository localImageInfoRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private ExternalImageInfoRepository externalImageInfoRepository;
 
 

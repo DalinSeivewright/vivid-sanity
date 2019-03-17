@@ -20,7 +20,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(entityManagerFactoryRef = "localEntityManager", transactionManagerRef = "localTransactionManager", basePackageClasses = LocalImageInfoRepository.class )
-@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "local")
 public class LocalDatasourceConfiguration {
 
     @Bean(name = "localDatasource")

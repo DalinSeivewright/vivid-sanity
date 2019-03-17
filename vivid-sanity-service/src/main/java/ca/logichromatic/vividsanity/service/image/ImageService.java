@@ -17,18 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "local")
 @Transactional
-public class PrivateImageService implements ImageServiceInterface {
+public class ImageService {
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -38,10 +34,10 @@ public class PrivateImageService implements ImageServiceInterface {
     @Autowired
     private ImageInfoDbService imageInfoDbService;
 
-    @Autowired(required = false)
+    @Autowired
     private LocalImageInfoRepository localImageInfoRepository;
 
-    @Autowired
+    @Autowired(required = false)
     private ExternalImageInfoRepository externalImageInfoRepository;
 
     @Autowired
@@ -52,7 +48,6 @@ public class PrivateImageService implements ImageServiceInterface {
         return imageOperationService.getImages(DatabaseTarget.LOCAL);
     }
 
-    @Override
     public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) throws IOException {
         log.error("I am private upload bean");
         String imageKey = generateUniqueId();

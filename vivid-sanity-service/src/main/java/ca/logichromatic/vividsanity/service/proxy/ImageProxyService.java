@@ -5,13 +5,11 @@ import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.service.image.ImageOperationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@ConditionalOnProperty(prefix="vivid", name="serverMode", havingValue = "local")
-public class PrivateImageProxyService implements ImageProxyServiceInterface {
+public class ImageProxyService {
     @Autowired
     private ApplicationProperties applicationProperties;
 

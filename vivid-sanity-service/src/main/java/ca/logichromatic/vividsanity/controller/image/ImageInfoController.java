@@ -1,7 +1,7 @@
 package ca.logichromatic.vividsanity.controller.image;
 
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
-import ca.logichromatic.vividsanity.service.image.ImageServiceInterface;
+import ca.logichromatic.vividsanity.service.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,13 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/images")
-public class ImageController {
+public class ImageInfoController {
 
     @Autowired
-    private ImageServiceInterface imageService;
+    private ImageService imageService;
 
     @GetMapping()
-    public List<ImageInfoDto> getImages() throws IOException {
+    public List<ImageInfoDto> getImages() {
         return imageService.getImages();
     }
 
