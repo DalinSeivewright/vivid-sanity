@@ -4,10 +4,12 @@ package ca.logichromatic.vividsanity.service.image;
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
+import ca.logichromatic.vividsanity.type.DatabaseTarget;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.List;
@@ -24,12 +26,12 @@ public class PublicImageService implements ImageServiceInterface {
 
     public List<ImageInfoDto> getImages() {
         log.error("I am the public bean!");
-        return imageOperationService.getImages(applicationProperties.getExternal().getBucket());
+        return imageOperationService.getImages(DatabaseTarget.EXTERNAL);
     }
 
 
     @Override
-    public ImageInfoDto uploadImage(InputStream fileStream, int byteSize) {
+    public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) {
         throw new ImageNotFoundException(); // TODO Decide what exceptions we actually want
     }
 

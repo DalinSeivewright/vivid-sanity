@@ -6,11 +6,14 @@ import ca.logichromatic.vividsanity.credential.CustomAWSCredentialsProvider;
 import ca.logichromatic.vividsanity.entity.ImageInfo;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
+import ca.logichromatic.vividsanity.repository.external.ExternalImageInfoRepository;
 import ca.logichromatic.vividsanity.repository.local.LocalImageInfoRepository;
 import ca.logichromatic.vividsanity.transformer.ImageInfoTransformer;
+import ca.logichromatic.vividsanity.type.DatabaseTarget;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,22 +32,26 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ImageOperationService {
-    private static final int MAX_UNIQUE_ID_GENERATE_ATTEMPTS = 5;
+    public static final int MAX_UNIQUE_ID_GENERATE_ATTEMPTS = 5;
+
+    @Autowired(required = false)
+    private LocalImageInfoRepository localImageInfoRepository;
 
     @Autowired
-    private LocalImageInfoRepository localImageInfoRepository;
+    private ExternalImageInfoRepository externalImageInfoRepository;
+
 
     @Autowired
     private ImageInfoTransformer imageInfoTransformer;
 
-    public List<ImageInfoDto> getImages(ApplicationProperties.BucketProperties bucketProperties) {
-        if (bucketProperties == null) {
-            log.warn("Null Bucket Properties passed in.  Returning empty array.");
-            return new ArrayList<>();
+    public List<ImageInfoDto> getImages(DatabaseTarget databaseTarget) {
+        if (databaseTarget == DatabaseTarget.EXTERNAL) {
+            return externalImageInfoRepository.findAll().stream()
+                    .map(imageInfo -> imageInfoTransformer.toDto(imageInfo))
+                    .collect(Collectors.toList());
         }
-
         return localImageInfoRepository.findAll().stream()
-                .map(imageInfo ->imageInfoTransformer.toDto(imageInfo))
+                .map(imageInfo -> imageInfoTransformer.toDto(imageInfo))
                 .collect(Collectors.toList());
     }
 
@@ -65,33 +72,16 @@ public class ImageOperationService {
         }
     }
 
-    public ImageInfoDto uploadImage(ApplicationProperties.BucketProperties bucketProperties, InputStream inputStream, int byteLength) {
-        try {
-            S3Client s3Client = buildClient(bucketProperties);
-            return uploadObject(s3Client, bucketProperties.getBucketKey(), inputStream, byteLength);
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("error");
-        }
-        return null;
-    }
-
-    private ImageInfoDto uploadObject(S3Client s3Client, String bucketKey, InputStream inputStream, int byteLength) {
-        String newObjectId = generateUniqueId(s3Client, bucketKey);
-        log.info("Using:" + newObjectId);
-        ImageInfo imageInfo = ImageInfo.newInstance(newObjectId).setDescription("Test Description.");
-        localImageInfoRepository.save(imageInfo);
-
+    public void uploadImage(S3Client s3Client, String bucketKey, String objectKey, InputStream inputStream, int byteLength) {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketKey)
-                .key(newObjectId)
+                .key(objectKey)
                 .build();
         RequestBody requestBody = RequestBody.fromInputStream(inputStream, byteLength);
         s3Client.putObject(request, requestBody);
-        return imageInfoTransformer.toDto(imageInfo);
     }
 
-    private String generateUniqueId(S3Client s3Client, String bucketKey) {
+    public String generateUniqueId(S3Client s3Client, String bucketKey) {
         String possibleId = ObjectIdGenerator.get();
         for (int i = 0; i < MAX_UNIQUE_ID_GENERATE_ATTEMPTS; i++) {
             try {
@@ -119,7 +109,7 @@ public class ImageOperationService {
         return s3Client.listObjects(request);
     }
 
-    private S3Client buildClient(ApplicationProperties.BucketProperties bucketProperties) {
+    public S3Client buildClient(ApplicationProperties.BucketProperties bucketProperties) {
         URI targetEndpointOverride = URI.create(bucketProperties.getUri());
         CustomAWSCredentials customAWSCredentials = CustomAWSCredentials.builder()
                 .accessKey(bucketProperties.getAccessKey())

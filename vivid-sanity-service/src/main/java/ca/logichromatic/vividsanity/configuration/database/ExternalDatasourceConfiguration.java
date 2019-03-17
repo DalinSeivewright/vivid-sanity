@@ -11,12 +11,15 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(entityManagerFactoryRef = "externalEntityManager", basePackageClasses = ExternalImageInfoRepository.class )
+@EnableJpaRepositories(entityManagerFactoryRef = "externalEntityManager", transactionManagerRef = "externalTransactionManager", basePackageClasses = ExternalImageInfoRepository.class )
 public class ExternalDatasourceConfiguration {
 
     @Bean(name = "externalDatasource")
@@ -25,12 +28,17 @@ public class ExternalDatasourceConfiguration {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean
+    @Bean(name = "externalEntityManager")
     public LocalContainerEntityManagerFactoryBean externalEntityManager( EntityManagerFactoryBuilder builder, @Qualifier("externalDatasource") DataSource dataSource) {
         return builder
                 .dataSource(dataSource)
                 .packages(ImageInfo.class)
                 .persistenceUnit("external").build();
+    }
+
+    @Bean(name = "externalTransactionManager")
+    public PlatformTransactionManager externalTransactionManager(@Qualifier("externalEntityManager") EntityManagerFactory externalEntityManager) {
+        return new JpaTransactionManager(externalEntityManager);
     }
 
 }

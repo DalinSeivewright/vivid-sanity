@@ -23,6 +23,6 @@ public class ImageController {
 
     @PostMapping
     public ImageInfoDto uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
-        return imageService.uploadImage(file.getInputStream(), file.getBytes().length);
+        return imageService.uploadImage(file, file.getBytes().length);
     }
 }
