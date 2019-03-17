@@ -1,0 +1,12 @@
+version: "3"
+services:
+  mariadb:
+    image: "turgon37/armhf-mariadb"
+    restart: unless-stopped
+    ports:
+     - "9001:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_USER: "${APP_USER}"
+      MYSQL_PASSWORD: "${APP_PASSWORD}"
+      MYSQL_DATABASE: "${APP_DATABASE}"

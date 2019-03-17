@@ -9,6 +9,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ public class ImageInfo {
     private String description;
 
     @OneToMany(mappedBy = "imageId", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Setter(AccessLevel.NONE)
     private List<ImageTag> tags;
 
     @Column(name="VISIBILITY")
@@ -43,6 +45,14 @@ public class ImageInfo {
         ImageInfo imageInfo = new ImageInfo();
         imageInfo.identifier = UUID.randomUUID();
         imageInfo.setImageKey(imageKey);
+        imageInfo.tags = new ArrayList<>();
         return imageInfo;
+    }
+
+    // TODO Maybe not do this?
+    public ImageInfo setTags(List<ImageTag> newTags) {
+        this.getTags().clear();
+        tags.addAll(newTags);
+        return this;
     }
 }

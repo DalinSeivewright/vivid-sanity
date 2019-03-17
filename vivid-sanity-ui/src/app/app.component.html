@@ -3,7 +3,7 @@
     Welcome to {{ title }}!
   </h1>
   <div [formGroup]="formGroup" *ngIf="localMode">
-    <input type="file" formControlName="fileInput" (change)="selectFile($event)">
+    <input type="file" (change)="selectFile($event)">
     <button (click)="uploadFile()" >Upload</button>
   </div>
   <img *ngFor="let x of imageData" [src]="x.imageUri">

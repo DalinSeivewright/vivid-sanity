@@ -1,4 +1,4 @@
-export enum VisibilityStatusType {
+export enum VisibilityType {
     PRIVATE,
     PUBLIC,
     PUBLIC_TEMPORARY

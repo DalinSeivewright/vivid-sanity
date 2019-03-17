@@ -3,17 +3,14 @@ package ca.logichromatic.vividsanity.service.image;
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentials;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentialsProvider;
-import ca.logichromatic.vividsanity.entity.ImageInfo;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.repository.external.ExternalImageInfoRepository;
 import ca.logichromatic.vividsanity.repository.local.LocalImageInfoRepository;
 import ca.logichromatic.vividsanity.transformer.ImageInfoTransformer;
-import ca.logichromatic.vividsanity.type.DatabaseTarget;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +22,7 @@ import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,12 +41,7 @@ public class ImageOperationService {
     @Autowired
     private ImageInfoTransformer imageInfoTransformer;
 
-    public List<ImageInfoDto> getImages(DatabaseTarget databaseTarget) {
-        if (databaseTarget == DatabaseTarget.EXTERNAL) {
-            return externalImageInfoRepository.findAll().stream()
-                    .map(imageInfo -> imageInfoTransformer.toDto(imageInfo))
-                    .collect(Collectors.toList());
-        }
+    public List<ImageInfoDto> getImages() {
         return localImageInfoRepository.findAll().stream()
                 .map(imageInfo -> imageInfoTransformer.toDto(imageInfo))
                 .collect(Collectors.toList());
@@ -79,6 +71,24 @@ public class ImageOperationService {
                 .build();
         RequestBody requestBody = RequestBody.fromInputStream(inputStream, byteLength);
         s3Client.putObject(request, requestBody);
+    }
+
+    public void uploadImageFromBytes(S3Client s3Client, String bucketKey, String objectKey, byte[] inputBytes) {
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucketKey)
+                .key(objectKey)
+                .build();
+        RequestBody requestBody = RequestBody.fromBytes(inputBytes);
+        s3Client.putObject(request, requestBody);
+    }
+
+    public void removeImage(S3Client s3Client, String bucketKey, String objectKey) {
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketKey)
+                .key(objectKey)
+                .build();
+        s3Client.deleteObject(request);
+
     }
 
     public String generateUniqueId(S3Client s3Client, String bucketKey) {
