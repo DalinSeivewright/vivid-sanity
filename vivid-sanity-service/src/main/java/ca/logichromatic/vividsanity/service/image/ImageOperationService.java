@@ -8,7 +8,9 @@ import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.repository.external.ExternalImageInfoRepository;
 import ca.logichromatic.vividsanity.repository.local.LocalImageInfoRepository;
 import ca.logichromatic.vividsanity.transformer.ImageInfoTransformer;
+import ca.logichromatic.vividsanity.util.ImageInputStream;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
+import javafx.scene.effect.ImageInput;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,6 @@ public class ImageOperationService {
 
     @Autowired
     private LocalImageInfoRepository localImageInfoRepository;
-
-    @Autowired(required = false)
-    private ExternalImageInfoRepository externalImageInfoRepository;
-
 
     @Autowired
     private ImageInfoTransformer imageInfoTransformer;
@@ -64,12 +62,12 @@ public class ImageOperationService {
         }
     }
 
-    public void uploadImage(S3Client s3Client, String bucketKey, String objectKey, InputStream inputStream, int byteLength) {
+    public void uploadImage(S3Client s3Client, String bucketKey, String objectKey, ImageInputStream imageInputStream) {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketKey)
                 .key(objectKey)
                 .build();
-        RequestBody requestBody = RequestBody.fromInputStream(inputStream, byteLength);
+        RequestBody requestBody = RequestBody.fromInputStream(imageInputStream.getInputStream(), imageInputStream.getBytes());
         s3Client.putObject(request, requestBody);
     }
 

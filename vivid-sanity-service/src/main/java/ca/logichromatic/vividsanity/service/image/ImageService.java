@@ -7,11 +7,11 @@ import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.model.ImageInfoUpdate;
 import ca.logichromatic.vividsanity.model.VisibilityStatus;
-import ca.logichromatic.vividsanity.repository.external.ExternalImageInfoRepository;
 import ca.logichromatic.vividsanity.repository.local.LocalImageInfoRepository;
 import ca.logichromatic.vividsanity.transformer.ImageInfoTransformer;
 import ca.logichromatic.vividsanity.transformer.ImageTagTransformer;
 import ca.logichromatic.vividsanity.type.SpecialDatabaseAction;
+import ca.logichromatic.vividsanity.util.ImageInputStream;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,14 +42,14 @@ public class ImageService {
     @Autowired
     private LocalImageInfoRepository localImageInfoRepository;
 
-    @Autowired(required = false)
-    private ExternalImageInfoRepository externalImageInfoRepository;
-
     @Autowired
     private ImageInfoTransformer imageInfoTransformer;
 
     @Autowired
     private ImageTagTransformer imageTagTransformer;
+
+    @Autowired
+    private ImageManipulationService imageManipulationService;
 
     public List<ImageInfoDto> getImages() {
         log.error("I am the private bean!");
@@ -55,17 +57,24 @@ public class ImageService {
     }
 
     public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) throws IOException {
-        log.error("I am private upload bean");
         String imageKey = generateUniqueId();
+
+        BufferedImage originalImage = imageManipulationService.getImage(multipartFile.getInputStream());
+        BufferedImage thumbnailImage = imageManipulationService.getThumbnail(originalImage);
+        List<Color> palette = imageManipulationService.getPalette(thumbnailImage);
+        String paletteString = palette.stream()
+                .map(color -> String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()))
+                .collect(Collectors.joining(";"));
+
         ImageInfo imageInfo = ImageInfo.newInstance(imageKey).setVisibility(VisibilityStatus.PRIVATE);
         imagePersistenceService.save(imageInfo, SpecialDatabaseAction.NONE);
 
         S3Client localS3Client = imageOperationService.buildClient(applicationProperties.getLocal().getBucket());
-        imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, multipartFile.getInputStream(), byteSize);
+        imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
         if (imageInfo.getVisibility() == VisibilityStatus.PUBLIC) {
             log.info("Visiblity public!");
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
-            imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, multipartFile.getInputStream(), byteSize);
+            imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
         }
         return imageInfoTransformer.toDto(imageInfo);
     }
