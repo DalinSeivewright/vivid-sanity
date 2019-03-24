@@ -3,9 +3,7 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
     <changeSet id="tag-1.0" author="logic">
         <tagDatabase tag="1.0"/>
@@ -19,6 +17,7 @@
             <column name="IMAGE_KEY" type="varchar(36)"/>
             <column name="DESCRIPTION" type="varchar(2500)"/>
             <column name="VISIBILITY" type="varchar(36)"/>
+            <column name="PALETTE" type="varchar(128)"/>
         </createTable>
     </changeSet>
 

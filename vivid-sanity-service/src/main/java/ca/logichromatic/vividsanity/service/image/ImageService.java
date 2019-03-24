@@ -51,6 +51,8 @@ public class ImageService {
     @Autowired
     private ImageManipulationService imageManipulationService;
 
+    public static String THUMBNAIL_SUFFIX = "_thumb";
+
     public List<ImageInfoDto> getImages() {
         log.error("I am the private bean!");
         return imageOperationService.getImages();
@@ -62,19 +64,25 @@ public class ImageService {
         BufferedImage originalImage = imageManipulationService.getImage(multipartFile.getInputStream());
         BufferedImage thumbnailImage = imageManipulationService.getThumbnail(originalImage);
         List<Color> palette = imageManipulationService.getPalette(thumbnailImage);
+        palette.stream().forEach(pal -> {
+            log.info(pal.toString());
+        });
         String paletteString = palette.stream()
                 .map(color -> String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()))
                 .collect(Collectors.joining(";"));
-
-        ImageInfo imageInfo = ImageInfo.newInstance(imageKey).setVisibility(VisibilityStatus.PRIVATE);
+        log.info(paletteString);
+        ImageInfo imageInfo = ImageInfo.newInstance(imageKey).setVisibility(VisibilityStatus.PRIVATE).setPalette(paletteString);
         imagePersistenceService.save(imageInfo, SpecialDatabaseAction.NONE);
 
         S3Client localS3Client = imageOperationService.buildClient(applicationProperties.getLocal().getBucket());
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
+        imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));
+
         if (imageInfo.getVisibility() == VisibilityStatus.PUBLIC) {
             log.info("Visiblity public!");
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
             imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
+            imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));
         }
         return imageInfoTransformer.toDto(imageInfo);
     }
@@ -104,9 +112,12 @@ public class ImageService {
                 log.info("Adding to External S3!");
                 byte[] imageBytes = imageOperationService.getImage(applicationProperties.getLocal().getBucket(), imageKey);
                 imageOperationService.uploadImageFromBytes(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, imageBytes);
+                byte[] thumbImageBytes = imageOperationService.getImage(applicationProperties.getLocal().getBucket(), imageKey + THUMBNAIL_SUFFIX);
+                imageOperationService.uploadImageFromBytes(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, thumbImageBytes);
             } else if (databaseAction == SpecialDatabaseAction.REMOVE_FROM_EXTERNAL) {
                 log.info("Removing from External S3!");
                 imageOperationService.removeImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey);
+                imageOperationService.removeImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX);
             }
         }
         return new ImageInfoDto();

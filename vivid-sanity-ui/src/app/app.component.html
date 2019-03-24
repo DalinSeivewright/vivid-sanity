@@ -6,6 +6,11 @@
     <input type="file" (change)="selectFile($event)">
     <button (click)="uploadFile()" >Upload</button>
   </div>
-  <img *ngFor="let x of imageData" [src]="x.imageUri">
+  <div>
+    <span *ngFor="let x of imageData">
+        <img [src]="x.thumbnailUri">
+      <app-palette-displayer [paletteString]="x.palette"></app-palette-displayer>
+    </span>
+  </div>
 </div>
 

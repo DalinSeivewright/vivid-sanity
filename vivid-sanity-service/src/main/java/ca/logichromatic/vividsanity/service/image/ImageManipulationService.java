@@ -79,7 +79,7 @@ public class ImageManipulationService {
                 .sorted(countComparator
                         .thenComparing(redComparator)
                         .thenComparing(greenComparator)
-                        .thenComparing(blueComparator))
+                        .thenComparing(blueComparator).reversed())
                 .collect(Collectors.toList());
 
         return finalMeans.stream().limit(8).collect(Collectors.toList());
@@ -163,9 +163,9 @@ public class ImageManipulationService {
                 .setMaxGreenValue(maxGreenValue)
                 .setMinBlueValue(minBlueValue)
                 .setMaxBlueValue(maxBlueValue)
-                .setMidRedValue((float)(maxRedValue - minRedValue) / 3.0f)
-                .setMidGreenValue((float)(maxGreenValue - minGreenValue) / 3.0f)
-                .setMidBlueValue((float)(maxBlueValue - minBlueValue) / 3.0f);
+                .setMidRedValue((maxRedValue - minRedValue) / 3)
+                .setMidGreenValue((maxGreenValue - minGreenValue) / 3)
+                .setMidBlueValue((maxBlueValue - minBlueValue) / 3);
     }
 
     @Data

@@ -22,7 +22,9 @@ public class ImageInputStream {
             ImageIO.write(image, IMAGE_FORMAT, byteStream);
             imageInputStream.bytes = byteStream.size();
             imageInputStream.inputStream = new ByteArrayInputStream(byteStream.toByteArray(), 0, byteStream.size());
+            return imageInputStream;
         } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

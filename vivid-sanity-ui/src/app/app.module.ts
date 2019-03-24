@@ -5,10 +5,12 @@ import { AppComponent } from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {ImageService} from "./services/image.service";
 import {AppInfoService} from "./services/app-info.service";
+import { PaletteDisplayerComponent } from './palette-displayer/palette-displayer.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PaletteDisplayerComponent
   ],
   imports: [
     BrowserModule,

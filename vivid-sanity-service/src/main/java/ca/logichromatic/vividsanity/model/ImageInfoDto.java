@@ -13,5 +13,6 @@ public class ImageInfoDto {
     private String thumbnailUri;
     private String description;
     private List<String> tags;
+    private String palette;
     private VisibilityStatus visibilityStatus;
 }

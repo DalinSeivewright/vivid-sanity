@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
       this.formGroup = this.formBuilder.group({
         description: this.formBuilder.control("This is my description"),
         tags: this.formBuilder.control("tag1, tag2, tag3"),
-        visibility: VisibilityType.PUBLIC
+        visibility: VisibilityType.PRIVATE
       })
     }
     this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
@@ -49,6 +49,9 @@ export class AppComponent implements OnInit {
     this.imageService.uploadImage(this.file).subscribe((imageInfo: ImageInfoModel) => {
       this.imageService.updateImage(imageInfo.imageKey, this.getImageInfoUploadObject()).subscribe(response => {
         console.log("UPload and Updated");
+        this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
+          this.imageData = response;
+        })
       });
     })
   }

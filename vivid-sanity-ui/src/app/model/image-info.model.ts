@@ -6,6 +6,7 @@ export class ImageInfoModel {
     thumbnailUri: string;
     description: string;
     tags: string[];
+    palette: string;
     visibilityStatus: VisibilityType
 }
 

@@ -38,6 +38,9 @@ public class ImageInfo {
     @Column(name="VISIBILITY")
     private VisibilityStatus visibility;
 
+    @Column(name="PALETTE")
+    private String palette;
+
     private ImageInfo() {
     }
 

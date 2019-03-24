@@ -3,6 +3,8 @@ package ca.logichromatic.vividsanity.transformer;
 import ca.logichromatic.vividsanity.controller.proxy.ImageProxyController;
 import ca.logichromatic.vividsanity.entity.ImageInfo;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
+import ca.logichromatic.vividsanity.service.image.ImagePersistenceService;
+import ca.logichromatic.vividsanity.service.image.ImageService;
 import ca.logichromatic.vividsanity.util.SimpleSubPath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +21,10 @@ public class ImageInfoTransformer {
                 .setImageKey(imageInfo.getImageKey())
                 .setDescription(imageInfo.getDescription())
                 .setImageUri(buildProxyPath(imageInfo.getImageKey()))
-                .setThumbnailUri(buildProxyPath(imageInfo.getImageKey()))
+                .setThumbnailUri(buildProxyPath(imageInfo.getImageKey() + ImageService.THUMBNAIL_SUFFIX))
                 .setVisibilityStatus(imageInfo.getVisibility())
-                .setTags(imageInfo.getTags().stream().map(tag -> imageTagTransformer.toString(tag)).collect(Collectors.toList()));
+                .setTags(imageInfo.getTags().stream().map(tag -> imageTagTransformer.toString(tag)).collect(Collectors.toList()))
+                .setPalette(imageInfo.getPalette());
     }
 
     private String buildProxyPath(String objectKey) {
