@@ -1,28 +1,53 @@
 <span>Image Info</span>
 <div [formGroup]="formGroup" *ngIf="!!imageInfo">
+  <div class="imageContainer">
+    <a [href]="imageInfo.imageUri" target="_blank"><img [src]="imageInfo.thumbnailUri"></a>
+    <div class="paletteContainer">
+      <app-palette-displayer [paletteString]="imageInfo.palette"></app-palette-displayer>
+    </div>
+  </div>
   <div>
-    <span *ngIf="!titleEditMode">
+    <span *ngIf="!isEditMode('title')">
       <label for="titleNoEdit">Title</label>
-      <span *ngIf="!titleEditMode" id="titleNoEdit">{{imageInfo.title}}</span>
+      <span id="titleNoEdit">{{imageInfo.title}}</span>
     </span>
-    <span *ngIf="titleEditMode">
+    <span *ngIf="isEditMode('title')">
       <label for="titleEdit">Title</label>
       <input id="titleEdit" type="text" formControlName="title" />
     </span>
   </div>
   <div>
-    <label for="description">Description</label>
-    <input id="description" type="text" formControlName="description" />
+    <span *ngIf="!isEditMode('description')">
+      <label for="descriptionNoEdit">Description</label>
+      <span id="descriptionNoEdit">{{imageInfo.description}}</span>
+    </span>
+    <span *ngIf="isEditMode('description')">
+      <label for="descriptionEdit">Description</label>
+      <input id="descriptionEdit" type="text" formControlName="description" />
+    </span>
   </div>
   <div>
-    <label for="tags">Tags</label>
-    <input id="tags" type="text" formControlName="tags" />
+    <span *ngIf="!isEditMode('tags')">
+      <label for="tagsNoEdit">Tags</label>
+      <span id="tagsNoEdit">{{tagString}}</span>
+    </span>
+    <span *ngIf="isEditMode('tags')">
+      <label for="tagsEdit">Tags</label>
+      <input id="tagsEdit" type="text" formControlName="tags" />
+    </span>
   </div>
   <div>
-    <label for="visibility">Visibility</label>
-    <select id="visibility" formControlName="visibility">
-      <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
-    </select>
+    <span *ngIf="!isEditMode('visibility')">
+      <label for="visibilityNoEdit">Visibility</label>
+      <span id="visibilityNoEdit">{{visibilityOptionsMap[imageInfo.visibility]}}</span>
+    </span>
+    <span *ngIf="isEditMode('visibility')">
+      <label for="visibilityEdit">Visibility</label>
+      <select id="visibilityEdit" formControlName="visibility">
+        <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
+      </select>
+    </span>
+
   </div>
   <!--<button (click)="uploadFile()">Upload</button>-->
 </div>

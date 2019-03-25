@@ -5,3 +5,7 @@
     margin: 1px;
     border: 1px solid rgba(0, 0, 0, .2);
 }
+
+.centerPalette {
+    display: inline-block;
+}

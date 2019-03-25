@@ -20,6 +20,8 @@ export class ImageViewContainerComponent implements OnInit {
 
   imageInfo: ImageInfoModel = null;
 
+  editModeMap: {} = {}
+
   constructor(private formBuilder: FormBuilder,
               private imageService: ImageService,
               private appInfoService: AppInfoService,
@@ -62,7 +64,11 @@ export class ImageViewContainerComponent implements OnInit {
   }
 
   private toTagString(tags: TagInfoModel[]): string {
-    return tags.join((", "))
+    return tags.map(tag => tag.name).join((", "))
+  }
+
+  get tagString(): string {
+    return this.toTagString(this.imageInfo.tags);
   }
 
 
@@ -70,6 +76,14 @@ export class ImageViewContainerComponent implements OnInit {
   get visibilityOptions() {
     return [{value: VisibilityType.PRIVATE, description: "Private"},
       {value: VisibilityType.PUBLIC, description: "Public"}];
+  }
+
+  // TODO This is stupid.  Make it not stupid.
+  get visibilityOptionsMap() {
+    return {
+      "PRIVATE": "Private",
+      "PUBLIC": "Public"
+    };
   }
 
   getImageInfoUploadObject(): ImageInfoUpdateModel {
@@ -88,8 +102,12 @@ export class ImageViewContainerComponent implements OnInit {
     }
   }
 
-  get titleEditMode(): boolean {
-    return false;
+  isEditMode(key: string): boolean {
+    if (this.editModeMap.hasOwnProperty(key)) {
+      return this.editModeMap[key];
+    } else {
+      return false;
+    }
   }
 
 }

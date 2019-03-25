@@ -30,7 +30,7 @@ public class ImageInfoTransformer {
     }
 
     public ImageInfo toEntity(ImageInfo imageInfo, ImageInfoUpdate imageInfoUpdate) {
-        return imageInfo.setTitle(imageInfo.getTitle())
+        return imageInfo.setTitle(imageInfoUpdate.getTitle())
                 .setDescription(imageInfoUpdate.getDescription())
                 .setTags(imageInfoUpdate.getTags().stream().map(tag -> imageTagTransformer.toEntity(imageInfo.getIdentifier(), tag.getName())).collect(Collectors.toList()))
                 .setVisibility(imageInfoUpdate.getVisibility());
