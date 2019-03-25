@@ -9,7 +9,8 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class ImageInfoUpdate {
+    private String title;
     private String description;
-    private List<String> tags;
-    private VisibilityStatus visibility;
+    private List<TagInfo> tags;
+    private VisiblityType visibility;
 }

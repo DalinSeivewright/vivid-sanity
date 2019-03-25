@@ -18,4 +18,5 @@ public class AppInfoController {
     public AppInfoDto getInfo() {
         return appInfoService.getInfo();
     }
+
 }

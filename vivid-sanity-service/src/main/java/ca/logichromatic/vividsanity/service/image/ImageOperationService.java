@@ -3,6 +3,7 @@ package ca.logichromatic.vividsanity.service.image;
 import ca.logichromatic.vividsanity.configuration.ApplicationProperties;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentials;
 import ca.logichromatic.vividsanity.credential.CustomAWSCredentialsProvider;
+import ca.logichromatic.vividsanity.entity.ImageInfo;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.repository.external.ExternalImageInfoRepository;
@@ -46,7 +47,16 @@ public class ImageOperationService {
     }
 
 
-    public byte[] getImage(ApplicationProperties.BucketProperties bucketProperties, String imageId){
+    public ImageInfoDto getImageInfo(String imageKey) {
+        ImageInfo imageInfo = localImageInfoRepository.findByImageKey(imageKey);
+        if (imageInfo == null) {
+            throw new ImageNotFoundException();
+        }
+        return imageInfoTransformer.toDto(imageInfo);
+    }
+
+
+    public byte[] getImageBytesFromS3(ApplicationProperties.BucketProperties bucketProperties, String imageId){
         try {
             S3Client s3Client = buildClient(bucketProperties);
             InputStream imageInputStream = getObjectAsInputStream(s3Client, bucketProperties.getBucketKey(), imageId);

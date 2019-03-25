@@ -17,6 +17,6 @@ public class ImageProxyService {
     private ImageOperationService imageOperationService;
 
     public byte[] getImage(String imageId){
-        return imageOperationService.getImage(applicationProperties.getLocal().getBucket(), imageId);
+        return imageOperationService.getImageBytesFromS3(applicationProperties.getLocal().getBucket(), imageId);
     }
 }

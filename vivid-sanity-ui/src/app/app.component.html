@@ -2,15 +2,31 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <div [formGroup]="formGroup" *ngIf="localMode">
-    <input type="file" (change)="selectFile($event)">
-    <button (click)="uploadFile()" >Upload</button>
-  </div>
-  <div>
-    <span *ngFor="let x of imageData">
-        <img [src]="x.thumbnailUri">
-      <app-palette-displayer [paletteString]="x.palette"></app-palette-displayer>
-    </span>
-  </div>
+    <!--<div class="container">-->
+      <!--<div class="grid-item">-->
+        <!--test-->
+      <!--</div>-->
+      <!--<div class="grid-item">-->
+        <!--test-->
+      <!--</div>-->
+      <!--<div class="grid-item">-->
+        <!--test-->
+      <!--</div>-->
+      <!--<div class="grid-item">-->
+        <!--test-->
+      <!--</div>-->
+    <!--</div>-->
+  <app-main-container [appInfo]="appInfo$ | async"></app-main-container>
+
+  <!--<div [formGroup]="formGroup" *ngIf="localMode">-->
+    <!--<input type="file" (change)="selectFile($event)">-->
+    <!--<button (click)="uploadFile()" >Upload</button>-->
+  <!--</div>-->
+  <!--<div>-->
+    <!--<div *ngFor="let x of imageData">-->
+      <!--<img [src]="x.thumbnailUri">-->
+      <!--<app-palette-displayer [paletteString]="x.palette"></app-palette-displayer>-->
+    <!--</div>-->
+  <!--</div>-->
 </div>
 

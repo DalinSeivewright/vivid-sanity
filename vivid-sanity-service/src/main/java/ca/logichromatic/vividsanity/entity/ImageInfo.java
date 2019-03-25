@@ -1,15 +1,19 @@
 package ca.logichromatic.vividsanity.entity;
 
-import ca.logichromatic.vividsanity.model.VisibilityStatus;
+import ca.logichromatic.vividsanity.model.VisiblityType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +22,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(of = "identifier")
 @Accessors(chain=true)
+@EntityListeners(AuditingEntityListener.class)
 public class ImageInfo {
     @Id
     @Column(name = "IMAGE_ID")
@@ -28,6 +33,9 @@ public class ImageInfo {
     @Column(name = "IMAGE_KEY")
     private String imageKey;
 
+    @Column(name="TITLE")
+    private String title;
+
     @Column(name="DESCRIPTION")
     private String description;
 
@@ -36,10 +44,21 @@ public class ImageInfo {
     private List<ImageTag> tags;
 
     @Column(name="VISIBILITY")
-    private VisibilityStatus visibility;
+    private VisiblityType visibility;
 
     @Column(name="PALETTE")
     private String palette;
+
+
+    @CreatedDate
+    @Column(name="CREATED_DATE", nullable = false, updatable = false)
+    @Setter(value = AccessLevel.NONE)
+    private Date createdDate;
+
+    @LastModifiedDate
+    @Column(name="UPDATED_DATE", nullable = false)
+    @Setter(value = AccessLevel.NONE)
+    private Date updatedDate;
 
     private ImageInfo() {
     }

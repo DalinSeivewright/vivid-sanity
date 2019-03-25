@@ -1,0 +1,11 @@
+.container {
+    width: 256px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap
+}
+
+.grid-item {
+    width: 128px;
+}
+

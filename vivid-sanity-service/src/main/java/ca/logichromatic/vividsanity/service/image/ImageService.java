@@ -6,10 +6,9 @@ import ca.logichromatic.vividsanity.entity.ImageInfo;
 import ca.logichromatic.vividsanity.exception.ImageNotFoundException;
 import ca.logichromatic.vividsanity.model.ImageInfoDto;
 import ca.logichromatic.vividsanity.model.ImageInfoUpdate;
-import ca.logichromatic.vividsanity.model.VisibilityStatus;
+import ca.logichromatic.vividsanity.model.VisiblityType;
 import ca.logichromatic.vividsanity.repository.local.LocalImageInfoRepository;
 import ca.logichromatic.vividsanity.transformer.ImageInfoTransformer;
-import ca.logichromatic.vividsanity.transformer.ImageTagTransformer;
 import ca.logichromatic.vividsanity.type.SpecialDatabaseAction;
 import ca.logichromatic.vividsanity.util.ImageInputStream;
 import ca.logichromatic.vividsanity.util.ObjectIdGenerator;
@@ -46,9 +45,6 @@ public class ImageService {
     private ImageInfoTransformer imageInfoTransformer;
 
     @Autowired
-    private ImageTagTransformer imageTagTransformer;
-
-    @Autowired
     private ImageManipulationService imageManipulationService;
 
     public static String THUMBNAIL_SUFFIX = "_thumb";
@@ -58,27 +54,31 @@ public class ImageService {
         return imageOperationService.getImages();
     }
 
+    public ImageInfoDto getImage(String imageKey) {
+        if (imageKey == null || imageKey.length() != ObjectIdGenerator.getObjectKeyLength()) {
+            throw new ImageNotFoundException();
+        }
+        return imageOperationService.getImageInfo(imageKey);
+    }
+
     public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) throws IOException {
         String imageKey = generateUniqueId();
 
         BufferedImage originalImage = imageManipulationService.getImage(multipartFile.getInputStream());
         BufferedImage thumbnailImage = imageManipulationService.getThumbnail(originalImage);
         List<Color> palette = imageManipulationService.getPalette(thumbnailImage);
-        palette.stream().forEach(pal -> {
-            log.info(pal.toString());
-        });
         String paletteString = palette.stream()
                 .map(color -> String.format("#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue()))
                 .collect(Collectors.joining(";"));
         log.info(paletteString);
-        ImageInfo imageInfo = ImageInfo.newInstance(imageKey).setVisibility(VisibilityStatus.PRIVATE).setPalette(paletteString);
+        ImageInfo imageInfo = ImageInfo.newInstance(imageKey).setVisibility(VisiblityType.PRIVATE).setPalette(paletteString);
         imagePersistenceService.save(imageInfo, SpecialDatabaseAction.NONE);
 
         S3Client localS3Client = imageOperationService.buildClient(applicationProperties.getLocal().getBucket());
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));
 
-        if (imageInfo.getVisibility() == VisibilityStatus.PUBLIC) {
+        if (imageInfo.getVisibility() == VisiblityType.PUBLIC) {
             log.info("Visiblity public!");
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
             imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
@@ -94,25 +94,23 @@ public class ImageService {
         }
         SpecialDatabaseAction databaseAction = SpecialDatabaseAction.NONE;
         if (imageInfo.getVisibility() != imageInfoUpdate.getVisibility()) {
-            if (imageInfo.getVisibility() == VisibilityStatus.PRIVATE && imageInfoUpdate.getVisibility() == VisibilityStatus.PUBLIC) {
+            if (imageInfo.getVisibility() == VisiblityType.PRIVATE && imageInfoUpdate.getVisibility() == VisiblityType.PUBLIC) {
                 databaseAction = SpecialDatabaseAction.ADD_TO_EXTERNAL;
             } else {
                 databaseAction = SpecialDatabaseAction.REMOVE_FROM_EXTERNAL;
             }
         }
 
-        imageInfo.setDescription(imageInfoUpdate.getDescription())
-                .setTags(imageInfoUpdate.getTags().stream().map(tag -> imageTagTransformer.toEntity(imageInfo.getIdentifier(), tag)).collect(Collectors.toList()))
-                .setVisibility(imageInfoUpdate.getVisibility());
+        imageInfo = imageInfoTransformer.toEntity(imageInfo, imageInfoUpdate);
         imagePersistenceService.save(imageInfo, databaseAction);
 
         if (databaseAction != SpecialDatabaseAction.NONE) {
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
             if (databaseAction == SpecialDatabaseAction.ADD_TO_EXTERNAL) {
                 log.info("Adding to External S3!");
-                byte[] imageBytes = imageOperationService.getImage(applicationProperties.getLocal().getBucket(), imageKey);
+                byte[] imageBytes = imageOperationService.getImageBytesFromS3(applicationProperties.getLocal().getBucket(), imageKey);
                 imageOperationService.uploadImageFromBytes(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, imageBytes);
-                byte[] thumbImageBytes = imageOperationService.getImage(applicationProperties.getLocal().getBucket(), imageKey + THUMBNAIL_SUFFIX);
+                byte[] thumbImageBytes = imageOperationService.getImageBytesFromS3(applicationProperties.getLocal().getBucket(), imageKey + THUMBNAIL_SUFFIX);
                 imageOperationService.uploadImageFromBytes(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, thumbImageBytes);
             } else if (databaseAction == SpecialDatabaseAction.REMOVE_FROM_EXTERNAL) {
                 log.info("Removing from External S3!");
@@ -134,5 +132,4 @@ public class ImageService {
         // TODO Do something nicer here.
         throw new IllegalStateException();
     }
-
 }

@@ -8,11 +8,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(of = "identifier")
 @Accessors(chain=true)
+@EntityListeners(AuditingEntityListener.class)
 public class ImageTag {
     @Id
     @Column(name = "IMAGE_TAG_ID")
@@ -37,6 +39,14 @@ public class ImageTag {
 
     @Column(name="DESCRIPTION")
     private String description;
+
+    @CreatedDate
+    @Column(name="CREATED_DATE")
+    private Date createdDate;
+
+    @LastModifiedDate
+    @Column(name="UPDATED_DATE")
+    private Date updatedDate;
 
     private ImageTag() { }
 

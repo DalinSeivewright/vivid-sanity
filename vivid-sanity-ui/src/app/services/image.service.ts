@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs/index";
 import {ImageInfoModel} from "../model/image-info.model";
 import {ImageInfoUpdateModel} from "../model/image-info-update.model";
@@ -11,6 +11,10 @@ export class ImageService {
 
     getImages(): Observable<ImageInfoModel[]> {
         return this.http.get<ImageInfoModel[]>(`./api/images`);
+    }
+
+    getImage(imageKey: string): Observable<ImageInfoModel> {
+        return this.http.get<ImageInfoModel>(`./api/images/${imageKey}`);
     }
 
     uploadImage(file: File): Observable<ImageInfoModel> {

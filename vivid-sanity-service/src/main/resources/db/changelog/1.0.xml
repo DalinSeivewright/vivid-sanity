@@ -14,10 +14,19 @@
             <column name="IMAGE_ID" type="varchar(36)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="IMAGE_KEY" type="varchar(36)"/>
+            <column name="IMAGE_KEY" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TITLE" type="varchar(256)"/>
             <column name="DESCRIPTION" type="varchar(2500)"/>
             <column name="VISIBILITY" type="varchar(36)"/>
             <column name="PALETTE" type="varchar(128)"/>
+            <column name="CREATED_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 
@@ -33,8 +42,16 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="IMAGE_ID" type="varchar(36)"/>
-            <column name="TAG" type="varchar(36)"/>
+            <column name="TAG" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
             <column name="DESCRIPTION" type="varchar(2500)"/>
+            <column name="CREATED_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATED_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

@@ -1,7 +1,7 @@
 .square {
     float: left;
-    width: 64px;
-    height: 64px;
-    margin: 5px;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
     border: 1px solid rgba(0, 0, 0, .2);
 }

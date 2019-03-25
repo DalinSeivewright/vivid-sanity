@@ -16,4 +16,8 @@ public class ObjectIdGenerator {
         }
         return objectIdBuilder.toString();
     }
+
+    public static int getObjectKeyLength() {
+        return MAX_LENGTH;
+    }
 }

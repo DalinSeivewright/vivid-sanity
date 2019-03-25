@@ -1,6 +1,7 @@
 package ca.logichromatic.vividsanity.transformer;
 
 import ca.logichromatic.vividsanity.entity.ImageTag;
+import ca.logichromatic.vividsanity.model.TagInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -8,8 +9,10 @@ import java.util.UUID;
 @Service
 public class ImageTagTransformer {
 
-    public String toString(ImageTag imageTag) {
-        return imageTag.getTag();
+
+
+    public TagInfo toDto(ImageTag imageTag) {
+        return new TagInfo().setName(imageTag.getTag());
     }
 
     // TODO Handle this properly.  Don't want to do a brand new list every time.

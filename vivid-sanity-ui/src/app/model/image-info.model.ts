@@ -1,13 +1,15 @@
 import {VisibilityType} from "./visibility.type";
+import {TagInfoModel} from "./tag-info.model";
 
-export class ImageInfoModel {
+export interface ImageInfoModel {
     imageKey: string;
     imageUri: string;
     thumbnailUri: string;
+    title: string
     description: string;
-    tags: string[];
+    tags: TagInfoModel[];
     palette: string;
-    visibilityStatus: VisibilityType
+    visibility: VisibilityType
 }
 
 

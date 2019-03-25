@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from "@angular/common/http";
-import {Observable} from "rxjs/index";
+import {BehaviorSubject, Observable, Subject} from "rxjs/index";
 import {ImageInfoModel} from "../model/image-info.model";
 import {AppInfoModel} from "../model/app-info.model";
 
@@ -9,7 +9,9 @@ import {AppInfoModel} from "../model/app-info.model";
 export class AppInfoService {
     constructor(private http: HttpClient) {}
 
-    getInfo(): Observable<AppInfoModel> {
-        return this.http.get<AppInfoModel>(`./api/info`);
+    private _appInfo$ = new BehaviorSubject<AppInfoModel>(null);
+    public appInfo$ = this._appInfo$.asObservable();
+    refreshInfo(): void {
+        this.http.get<AppInfoModel>(`./api/info`).subscribe(appInfo => this._appInfo$.next(appInfo));
     }
 }

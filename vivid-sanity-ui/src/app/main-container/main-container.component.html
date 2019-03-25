@@ -1,0 +1,22 @@
+<div>
+  <div class="row">
+    <div class="col">Search</div>
+    <div class="col">
+      <div class="row">
+        <a [routerLink]="['/recent']">Recent</a>
+        <a [routerLink]="['/upload']">Upload</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <span>Tags</span>
+      <app-tag-list-container [tags]="tags"></app-tag-list-container>
+    </div>
+    <div class="col-large">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>

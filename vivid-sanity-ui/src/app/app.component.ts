@@ -7,6 +7,7 @@ import {AppInfoModel} from "./model/app-info.model";
 import {AppInfoService} from "./services/app-info.service";
 import {VisibilityType} from "./model/visibility.type";
 import {ImageInfoUpdateModel} from "./model/image-info-update.model";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,10 @@ export class AppComponent implements OnInit {
   formGroup: FormGroup = null;
   file: File = null;
   imageData: ImageInfoModel[] = [];
-  serverMode: ServerModeType = null;
+
+  appInfo$: Observable<AppInfoModel> = this.appInfoService.appInfo$;
+
+  // appInfo: AppInfoModel = null;
   constructor(private imageService: ImageService,
                private appInfoService: AppInfoService,
                private formBuilder: FormBuilder) {
@@ -36,41 +40,42 @@ export class AppComponent implements OnInit {
     this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
       this.imageData = response;
     })
-
-    this.appInfoService.getInfo().subscribe((response: AppInfoModel) => {
-      if (response) {
-        this.serverMode = response.serverMode;
-      }
-    })
+    //
+    this.appInfoService.refreshInfo();
 
   }
 
-  uploadFile() {
-    this.imageService.uploadImage(this.file).subscribe((imageInfo: ImageInfoModel) => {
-      this.imageService.updateImage(imageInfo.imageKey, this.getImageInfoUploadObject()).subscribe(response => {
-        console.log("UPload and Updated");
-        this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
-          this.imageData = response;
-        })
-      });
-    })
-  }
+  // uploadFile() {
+  //   this.imageService.uploadImage(this.file).subscribe((imageInfo: ImageInfoModel) => {
+  //     this.imageService.updateImage(imageInfo.imageKey, this.getImageInfoUploadObject()).subscribe(response => {
+  //       console.log("UPload and Updated");
+  //       this.imageService.getImages().subscribe((response: ImageInfoModel[]) => {
+  //         this.imageData = response;
+  //       })
+  //     });
+  //   })
+  // }
 
-  getImageInfoUploadObject(): ImageInfoUpdateModel {
-    const tags: string[] = this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
-    return {
-      "description": this.formGroup.get("description").value,
-      "tags": tags,
-      "visibility": this.formGroup.get("visibility").value
-    }
-  }
+  // getImageInfoUploadObject(): ImageInfoUpdateModel {
+  //   const tags: string[] = this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
+  //   return {
+  //     "title": ''
+  //     "description": this.formGroup.get("description").value,
+  //     "tags": tags,
+  //     "visibility": this.formGroup.get("visibility").value
+  //   }
+  // }
 
-  selectFile(event) {
-    this.file = event.target.files[0];
-  }
+//   selectFile(event) {
+//     this.file = event.target.files[0];
+// }
 
-  get localMode(): boolean {
-    console.log(this.serverMode === ServerModeType.LOCAL);
-    return this.serverMode === ServerModeType.LOCAL;
-  }
+  // get localMode(): boolean {
+  //   return this.appInfo.serverMode === ServerModeType.LOCAL;
+  // }
+  //
+  // get tags() {
+  //   return this.appInfo.tags;
+  // }
+
 }

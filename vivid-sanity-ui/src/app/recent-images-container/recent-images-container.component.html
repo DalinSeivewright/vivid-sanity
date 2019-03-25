@@ -1,0 +1,7 @@
+<span>Recent Images</span>
+<div class="flex-container">
+  <div *ngFor="let x of (recentImages$ | async)">
+    <a [routerLink]="getRouterImageLink(x)"><img [src]="x.thumbnailUri"></a>
+  <!--<app-palette-displayer [paletteString]="x.palette"></app-palette-displayer>-->
+  </div>
+</div>

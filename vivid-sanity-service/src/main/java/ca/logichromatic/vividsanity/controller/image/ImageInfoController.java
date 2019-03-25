@@ -28,6 +28,11 @@ public class ImageInfoController {
         return imageService.getImages();
     }
 
+    @GetMapping("/{imageKey}")
+    public ImageInfoDto getImage(@PathVariable String imageKey) {
+        return imageService.getImage(imageKey);
+    }
+
     @PostMapping
     public ImageInfoDto uploadImage(@RequestParam("file") MultipartFile file) throws IOException {
         if (applicationProperties.getServerMode() == ServerMode.EXTERNAL) {

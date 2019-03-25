@@ -1,0 +1,28 @@
+<span>Image Info</span>
+<div [formGroup]="formGroup" *ngIf="!!imageInfo">
+  <div>
+    <span *ngIf="!titleEditMode">
+      <label for="titleNoEdit">Title</label>
+      <span *ngIf="!titleEditMode" id="titleNoEdit">{{imageInfo.title}}</span>
+    </span>
+    <span *ngIf="titleEditMode">
+      <label for="titleEdit">Title</label>
+      <input id="titleEdit" type="text" formControlName="title" />
+    </span>
+  </div>
+  <div>
+    <label for="description">Description</label>
+    <input id="description" type="text" formControlName="description" />
+  </div>
+  <div>
+    <label for="tags">Tags</label>
+    <input id="tags" type="text" formControlName="tags" />
+  </div>
+  <div>
+    <label for="visibility">Visibility</label>
+    <select id="visibility" formControlName="visibility">
+      <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
+    </select>
+  </div>
+  <!--<button (click)="uploadFile()">Upload</button>-->
+</div>
