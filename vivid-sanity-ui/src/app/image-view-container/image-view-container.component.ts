@@ -39,12 +39,7 @@ export class ImageViewContainerComponent implements OnInit {
         this.router.navigate(["/recent"]);
         return;
       }
-
-      this.imageService.getImage(params.get("imageKey")).subscribe((imageInfo) => {
-        this.imageInfo = imageInfo;
-        this.updateFormGroup(this.imageInfo);
-      })
-
+      this.refreshInfo(params.get("imageKey"));
     })
   }
 
@@ -54,39 +49,46 @@ export class ImageViewContainerComponent implements OnInit {
     console.log("On Init!")
   }
 
-  private updateFormGroup(imageInfo: ImageInfoModel) {
-    this.formGroup.patchValue({
-      'title': imageInfo.title,
-      'description': imageInfo.description,
-      'tags': this.toTagString(imageInfo.tags),
-      'visiblity': imageInfo.visibility
-    })
-  }
-
-  private toTagString(tags: TagInfoModel[]): string {
-    return tags.map(tag => tag.name).join((", "))
-  }
-
-  get tagString(): string {
-    return this.toTagString(this.imageInfo.tags);
+  setEditMode(fieldKey: string, editMode: boolean) {
+    this.editModeMap[fieldKey] = editMode;
+    if (!editMode) {
+      const patchValue = {}
+      patchValue[fieldKey] = this.getImageInfoKeyValue(fieldKey);
+      this.formGroup.patchValue(patchValue);
+    }
   }
 
 
-
-  get visibilityOptions() {
-    return [{value: VisibilityType.PRIVATE, description: "Private"},
-      {value: VisibilityType.PUBLIC, description: "Public"}];
+  isEditMode(key: string): boolean {
+    if (this.editModeMap.hasOwnProperty(key)) {
+      return this.editModeMap[key];
+    } else {
+      return false;
+    }
   }
 
-  // TODO This is stupid.  Make it not stupid.
-  get visibilityOptionsMap() {
-    return {
-      "PRIVATE": "Private",
-      "PUBLIC": "Public"
-    };
+  isAnyEditMode(): boolean {
+    return this.isEditMode('title') ||
+        this.isEditMode('description') ||
+        this.isEditMode('tags') ||
+        this.isEditMode('visibility');
   }
 
-  getImageInfoUploadObject(): ImageInfoUpdateModel {
+  turnOffAllEdit() {
+    this.setEditMode('title', false);
+    this.setEditMode('description', false);
+    this.setEditMode('tags', false);
+    this.setEditMode('visibility', false);
+  }
+
+  updateImageInfo() {
+    const imageInfoUpdate = this.getImageInfoUpdateObject();
+    this.imageService.updateImage(this.imageInfo.imageKey, imageInfoUpdate).subscribe(() => {
+      this.refreshInfo(this.imageInfo.imageKey);
+    });
+  }
+
+  private getImageInfoUpdateObject(): ImageInfoUpdateModel {
     const tags: string[] = this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
     const tagInfos: TagInfoModel[] = tags.map((tag) => {
       return {
@@ -102,12 +104,52 @@ export class ImageViewContainerComponent implements OnInit {
     }
   }
 
-  isEditMode(key: string): boolean {
-    if (this.editModeMap.hasOwnProperty(key)) {
-      return this.editModeMap[key];
-    } else {
-      return false;
-    }
+  private refreshInfo(imageKey: string) {
+    this.imageService.getImage(imageKey).subscribe((imageInfo) => {
+      this.imageInfo = imageInfo;
+      this.updateFormGroup(this.imageInfo);
+      this.turnOffAllEdit();
+    })
   }
+
+  private getImageInfoKeyValue(fieldKey) {
+    if (fieldKey === 'tags') {
+      return this.toTagString(this.imageInfo.tags);
+    }
+    return this.imageInfo[fieldKey];
+  }
+
+  private updateFormGroup(imageInfo: ImageInfoModel) {
+    this.formGroup.patchValue({
+      'title': imageInfo.title,
+      'description': imageInfo.description,
+      'tags': this.toTagString(imageInfo.tags),
+      'visiblity': imageInfo.visibility
+    })
+  }
+
+  private toTagString(tags: TagInfoModel[]): string {
+    return tags.map(tag => tag.name).join((", "))
+  }
+
+
+
+  get tagString(): string {
+    return this.toTagString(this.imageInfo.tags);
+  }
+
+  get visibilityOptions() {
+    return [{value: VisibilityType.PRIVATE, description: "Private"},
+      {value: VisibilityType.PUBLIC, description: "Public"}];
+  }
+
+  // TODO This is stupid.  Make it not stupid.
+  get visibilityOptionsMap() {
+    return {
+      "PRIVATE": "Private",
+      "PUBLIC": "Public"
+    };
+  }
+
 
 }
