@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ImageService} from "../services/image.service";
 import {AppInfoService} from "../services/app-info.service";
@@ -7,18 +7,24 @@ import {VisibilityType} from "../model/visibility.type";
 import {ImageInfoModel} from "../model/image-info.model";
 import {ImageInfoUpdateModel} from "../model/image-info-update.model";
 import {TagInfoModel} from "../model/tag-info.model";
+import {AppInfoModel} from "../model/app-info.model";
+import {ServerModeType} from "../model/server-mode.type";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-image-view-container',
   templateUrl: './image-view-container.component.html',
   styleUrls: ['./image-view-container.component.css']
 })
-export class ImageViewContainerComponent implements OnInit {
+export class ImageViewContainerComponent implements OnInit, OnDestroy {
 
   formGroup: FormGroup = null;
 
-
   imageInfo: ImageInfoModel = null;
+
+  showUpdate: boolean = false;
+
+  appInfoSubscription: Subscription = Subscription.EMPTY;
 
   editModeMap: {} = {}
 
@@ -33,6 +39,13 @@ export class ImageViewContainerComponent implements OnInit {
       tags: this.formBuilder.control(null),
       visibility: VisibilityType.PRIVATE
     })
+    this.appInfoSubscription = this.appInfoService.appInfo$.subscribe((appInfo: AppInfoModel) => {
+      if (!appInfo || appInfo.serverMode === ServerModeType.EXTERNAL) {
+        this.showUpdate = false;
+      } else {
+        this.showUpdate = true;
+      }
+    });
     this.activatedRoute.paramMap.subscribe((params) => {
       // TODO Get Guards
       if (!params.has("imageKey")) {
@@ -47,6 +60,10 @@ export class ImageViewContainerComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("On Init!")
+  }
+
+  ngOnDestroy(): void {
+   this.appInfoSubscription.unsubscribe();
   }
 
   setEditMode(fieldKey: string, editMode: boolean) {

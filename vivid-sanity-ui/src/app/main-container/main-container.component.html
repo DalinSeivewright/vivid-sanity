@@ -4,7 +4,7 @@
     <div class="col">
       <div class="row">
         <a [routerLink]="['/recent']">Recent</a>
-        <a [routerLink]="['/upload']">Upload</a>
+        <a *ngIf="showUploadLink" [routerLink]="['/upload']">Upload</a>
       </div>
     </div>
   </div>
