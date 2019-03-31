@@ -38,7 +38,8 @@ export class ImageViewContainerComponent implements OnDestroy {
       description: this.formBuilder.control(null),
       tags: this.formBuilder.control(null),
       visibility: VisibilityType.PRIVATE
-    })
+    });
+    this.formGroup.disable();
     this.appInfoSubscription = this.appInfoService.appInfo$.subscribe((appInfo: AppInfoModel) => {
       if (!appInfo || appInfo.serverMode === ServerModeType.EXTERNAL) {
         this.adminFunctions = false;
@@ -49,7 +50,7 @@ export class ImageViewContainerComponent implements OnDestroy {
     this.activatedRoute.paramMap.subscribe((params) => {
       // TODO Get Guards
       if (!params.has("imageKey")) {
-        this.router.navigate(["/recent"]);
+        this.navigateRecent();
         return;
       }
       this.refreshInfo(params.get("imageKey"));
@@ -113,14 +114,13 @@ export class ImageViewContainerComponent implements OnDestroy {
     this.imageService.getImage(imageKey).subscribe((imageInfo) => {
       this.imageInfo = imageInfo;
       this.updateFormGroup(this.imageInfo);
-    })
+    }, () => {
+      this.navigateRecent();
+    });
   }
 
-  private getImageInfoKeyValue(fieldKey) {
-    if (fieldKey === 'tags') {
-      return this.toTagString(this.imageInfo.tags);
-    }
-    return this.imageInfo[fieldKey];
+  private navigateRecent() {
+    this.router.navigate(["/recent"]);
   }
 
   private updateFormGroup(imageInfo: ImageInfoModel) {
@@ -128,7 +128,7 @@ export class ImageViewContainerComponent implements OnDestroy {
       'title': imageInfo.title,
       'description': imageInfo.description,
       'tags': this.toTagString(imageInfo.tags),
-      'visiblity': imageInfo.visibility
+      'visibility': imageInfo.visibility
     })
   }
 

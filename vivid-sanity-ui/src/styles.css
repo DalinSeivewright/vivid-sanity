@@ -23,6 +23,12 @@ h1, h2, h3, h4, h5, label {
     color: #d6b9a8;
 }
 
+.centering-container {
+    margin: 0 auto;
+}
+.centering-text-container {
+    text-align: center;
+}
 
 .container {
     display: flex;
@@ -77,6 +83,7 @@ h1, h2, h3, h4, h5, label {
     min-width: 256px;
     flex-grow: 1;
 }
+
 
 @media all and (min-width: 600px) {
     .column-container {

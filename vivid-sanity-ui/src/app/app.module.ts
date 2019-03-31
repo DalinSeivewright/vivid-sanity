@@ -22,6 +22,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { HeaderLinksComponent } from './header-links/header-links.component';
+import { SearchComponent } from './search/search.component';
 
 
 const appRoutes: Routes = [
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
   { path: 'recent', component: RecentImagesContainerComponent },
   { path: 'upload', component: UploadImageContainerComponent },
   { path: 'image/:imageKey', component: ImageViewContainerComponent },
+  {path: '**', redirectTo: 'recent'}
 ];
 
 
@@ -43,6 +45,7 @@ const appRoutes: Routes = [
     ImageViewContainerComponent,
     RelatedImagesContainerComponent,
     HeaderLinksComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,

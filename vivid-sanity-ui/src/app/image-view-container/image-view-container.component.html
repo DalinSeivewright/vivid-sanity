@@ -10,20 +10,20 @@
   </div>
   <div class="imageDetailsContainer">
     <div class="inputGroup">
-      <label for="titleA">Title</label>
-      <input [ngClass]="inputClass" id="titleA" formControlName="title" />
+      <label for="title">Title</label>
+      <input [ngClass]="inputClass" id="title" formControlName="title" />
     </div>
     <div class="inputGroup">
-      <label for="descriptionA">Description</label>
-      <textarea [ngClass]="inputClass" id="descriptionA" spellcheck="false" formControlName="description"></textarea>
+      <label for="description">Description</label>
+      <textarea [ngClass]="inputClass" id="description" spellcheck="false" formControlName="description"></textarea>
     </div>
     <div class="inputGroup">
-      <label for="tagsA">Tags</label>
-      <input [ngClass]="inputClass" formControlName="tags" id="tagsA" type="text" />
+      <label for="tags">Tags</label>
+      <input [ngClass]="inputClass" formControlName="tags" id="tags" type="text" />
     </div>
     <div class="inputGroup">
-      <label for="visibilityA">Visibility</label>
-      <select [ngClass]="inputClass" id="visibilityA" formControlName="visibility">
+      <label for="visibility">Visibility</label>
+      <select [ngClass]="inputClass" id="visibility" formControlName="visibility">
         <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
       </select>
     </div>
