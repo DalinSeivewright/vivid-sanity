@@ -1,4 +1,5 @@
 
+
 .flex-container {
     display:flex;
     flex-direction: row;
@@ -6,16 +7,17 @@
 }
 
 .imageWrapper {
-    height:256px;
+    min-height:128px;
+    min-width:128px;
+    height:128px;
     justify-content: center;
     align-items: center;
+
     display: flex;
+    margin: 2px;
 }
-
 .imageSizing {
-    max-width: 256px;
-    max-height: 256px;
+    max-width: 128px;
+    max-height: 128px;
+    vertical-align:bottom;
 }
-
-
-

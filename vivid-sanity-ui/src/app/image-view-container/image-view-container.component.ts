@@ -16,17 +16,17 @@ import {Subscription} from "rxjs";
   templateUrl: './image-view-container.component.html',
   styleUrls: ['./image-view-container.component.css']
 })
-export class ImageViewContainerComponent implements OnInit, OnDestroy {
+export class ImageViewContainerComponent implements OnDestroy {
 
   formGroup: FormGroup = null;
 
   imageInfo: ImageInfoModel = null;
 
-  showUpdate: boolean = false;
+  adminFunctions: boolean = false;
 
   appInfoSubscription: Subscription = Subscription.EMPTY;
 
-  editModeMap: {} = {}
+  editMode: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private imageService: ImageService,
@@ -41,9 +41,9 @@ export class ImageViewContainerComponent implements OnInit, OnDestroy {
     })
     this.appInfoSubscription = this.appInfoService.appInfo$.subscribe((appInfo: AppInfoModel) => {
       if (!appInfo || appInfo.serverMode === ServerModeType.EXTERNAL) {
-        this.showUpdate = false;
+        this.adminFunctions = false;
       } else {
-        this.showUpdate = true;
+        this.adminFunctions = true;
       }
     });
     this.activatedRoute.paramMap.subscribe((params) => {
@@ -56,46 +56,32 @@ export class ImageViewContainerComponent implements OnInit, OnDestroy {
     })
   }
 
-
-
-  ngOnInit(): void {
-    console.log("On Init!")
-  }
-
   ngOnDestroy(): void {
-   this.appInfoSubscription.unsubscribe();
+    this.appInfoSubscription.unsubscribe();
   }
 
-  setEditMode(fieldKey: string, editMode: boolean) {
-    this.editModeMap[fieldKey] = editMode;
-    if (!editMode) {
-      const patchValue = {}
-      patchValue[fieldKey] = this.getImageInfoKeyValue(fieldKey);
-      this.formGroup.patchValue(patchValue);
+
+  public edit(): void {
+    this.editMode = true;
+    this.formGroup.enable();
+  }
+
+  public save(): void {
+    this.updateImageInfo();
+    this.formGroup.disable();
+  }
+
+  public cancel(): void {
+    this.editMode = false;
+    this.formGroup.disable();
+    this.refreshInfo(this.imageInfo.imageKey);
+  }
+
+  get inputClass() {
+    if (this.editMode) {
+      return "";
     }
-  }
-
-
-  isEditMode(key: string): boolean {
-    if (this.editModeMap.hasOwnProperty(key)) {
-      return this.editModeMap[key];
-    } else {
-      return false;
-    }
-  }
-
-  isAnyEditMode(): boolean {
-    return this.isEditMode('title') ||
-        this.isEditMode('description') ||
-        this.isEditMode('tags') ||
-        this.isEditMode('visibility');
-  }
-
-  turnOffAllEdit() {
-    this.setEditMode('title', false);
-    this.setEditMode('description', false);
-    this.setEditMode('tags', false);
-    this.setEditMode('visibility', false);
+    return "disabled"
   }
 
   updateImageInfo() {
@@ -125,7 +111,6 @@ export class ImageViewContainerComponent implements OnInit, OnDestroy {
     this.imageService.getImage(imageKey).subscribe((imageInfo) => {
       this.imageInfo = imageInfo;
       this.updateFormGroup(this.imageInfo);
-      this.turnOffAllEdit();
     })
   }
 
@@ -150,23 +135,9 @@ export class ImageViewContainerComponent implements OnInit, OnDestroy {
   }
 
 
-
-  get tagString(): string {
-    return this.toTagString(this.imageInfo.tags);
-  }
-
   get visibilityOptions() {
     return [{value: VisibilityType.PRIVATE, description: "Private"},
       {value: VisibilityType.PUBLIC, description: "Public"}];
   }
-
-  // TODO This is stupid.  Make it not stupid.
-  get visibilityOptionsMap() {
-    return {
-      "PRIVATE": "Private",
-      "PUBLIC": "Public"
-    };
-  }
-
 
 }

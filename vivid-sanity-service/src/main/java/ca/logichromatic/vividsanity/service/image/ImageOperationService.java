@@ -55,6 +55,11 @@ public class ImageOperationService {
         return imageInfoTransformer.toDto(imageInfo);
     }
 
+    public List<ImageInfoDto> getSimilarImages(String imageKey) {
+        return localImageInfoRepository.findSimilarImages(imageKey).stream()
+                .map(imageInfo -> imageInfoTransformer.toDto(imageInfo))
+                .collect(Collectors.toList());
+    }
 
     public byte[] getImageBytesFromS3(ApplicationProperties.BucketProperties bucketProperties, String imageId){
         try {
@@ -140,4 +145,6 @@ public class ImageOperationService {
                 .build();
         return s3Client;
     }
+
+
 }

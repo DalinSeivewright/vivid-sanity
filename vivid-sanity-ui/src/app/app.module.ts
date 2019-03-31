@@ -13,6 +13,15 @@ import { RecentImagesContainerComponent } from './recent-images-container/recent
 import {RouterModule, Routes} from "@angular/router";
 import { UploadImageContainerComponent } from './upload-image-container/upload-image-container.component';
 import { ImageViewContainerComponent } from './image-view-container/image-view-container.component';
+import { RelatedImagesContainerComponent } from './related-images-container/related-images-container.component';
+
+import {FontAwesomeModule } from '@fortawesome/angular-fontawesome'
+
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+
 
 const appRoutes: Routes = [
   { path: '', component: RecentImagesContainerComponent },
@@ -30,16 +39,22 @@ const appRoutes: Routes = [
     TagListContainerComponent,
     RecentImagesContainerComponent,
     UploadImageContainerComponent,
-    ImageViewContainerComponent
+    ImageViewContainerComponent,
+    RelatedImagesContainerComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(appRoutes, {useHash: false})
+    RouterModule.forRoot(appRoutes, {useHash: false}),
+    FontAwesomeModule
   ],
   providers: [ImageService, AppInfoService, RecentImagesService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    library.add(fas, far);
+  }
+}

@@ -1,60 +1,44 @@
-<span>Image Info</span>
-<div [formGroup]="formGroup" *ngIf="!!imageInfo">
-  <div class="imageContainer">
-    <a [href]="imageInfo.imageUri" target="_blank"><img [src]="imageInfo.thumbnailUri"></a>
-    <div class="paletteContainer">
+<div class="column-container" [formGroup]="formGroup" *ngIf="!!imageInfo">
+  <div class="imageViewContainer">
+    <div class="palette">
+      <a [href]="imageInfo.imageUri" target="_blank"><img class="image"  [src]="imageInfo.thumbnailUri"></a>
+    </div>
+    <div class="palette">
       <app-palette-displayer [paletteString]="imageInfo.palette"></app-palette-displayer>
     </div>
   </div>
-  <div>
-    <span *ngIf="!showUpdate || !isEditMode('title')">
-      <label for="titleNoEdit">Title</label>
-      <span id="titleNoEdit">{{imageInfo.title}}</span>
-      <span *ngIf="showUpdate" (click)="setEditMode('title', true)">+</span>
-    </span>
-    <span *ngIf="showUpdate && isEditMode('title')">
-      <label for="titleEdit">Title</label>
-      <input id="titleEdit" type="text" formControlName="title" />
-      <span *ngIf="showUpdate" (click)="setEditMode('title', false)">-</span>
-    </span>
-  </div>
-  <div>
-    <span *ngIf="!showUpdate || !isEditMode('description')">
-      <label for="descriptionNoEdit">Description</label>
-      <span id="descriptionNoEdit">{{imageInfo.description}}</span>
-      <span *ngIf="showUpdate" (click)="setEditMode('description', true)">+</span>
-    </span>
-    <span *ngIf="showUpdate && isEditMode('description')">
-      <label for="descriptionEdit">Description</label>
-      <input id="descriptionEdit" type="text" formControlName="description" />
-      <span *ngIf="showUpdate" (click)="setEditMode('description', false)">-</span>
-    </span>
-  </div>
-  <div>
-    <span *ngIf="!showUpdate || !isEditMode('tags')">
-      <label for="tagsNoEdit">Tags</label>
-      <span id="tagsNoEdit">{{tagString}}</span>
-      <span *ngIf="showUpdate" (click)="setEditMode('tags', true)">+</span>
-    </span>
-    <span *ngIf="showUpdate && isEditMode('tags')">
-      <label for="tagsEdit">Tags</label>
-      <input id="tagsEdit" type="text" formControlName="tags" />
-      <span *ngIf="showUpdate" (click)="setEditMode('tags', false)">-</span>
-    </span>
-  </div>
-  <div>
-    <span *ngIf="!showUpdate || !isEditMode('visibility')">
-      <label for="visibilityNoEdit">Visibility</label>
-      <span id="visibilityNoEdit">{{visibilityOptionsMap[imageInfo.visibility]}}</span>
-      <span *ngIf="showUpdate" (click)="setEditMode('visibility', true)">+</span>
-    </span>
-    <span *ngIf="showUpdate && isEditMode('visibility')">
-      <label for="visibilityEdit">Visibility</label>
-      <select id="visibilityEdit" formControlName="visibility">
+  <div class="imageDetailsContainer">
+    <h2>Details</h2>
+    <div class="inputGroup">
+      <label for="titleA">Title</label>
+      <input [ngClass]="inputClass" id="titleA" formControlName="title" />
+    </div>
+    <div class="inputGroup">
+      <label for="descriptionA">Description</label>
+      <textarea [ngClass]="inputClass" id="descriptionA" spellcheck="false" formControlName="description"></textarea>
+    </div>
+    <div class="inputGroup">
+      <label for="tagsA">Tags</label>
+      <input [ngClass]="inputClass" formControlName="tags" id="tagsA" type="text" />
+    </div>
+    <div class="inputGroup">
+      <label for="visibilityA">Visibility</label>
+      <select [ngClass]="inputClass" id="visibilityA" formControlName="visibility">
         <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
       </select>
-      <span *ngIf="showUpdate" (click)="setEditMode('visibility', false)">-</span>
-    </span>
+    </div>
+    <div *ngIf="adminFunctions">
+      <button class="buttons" (click)="edit()" *ngIf="!editMode">Edit</button>
+      <button class="buttons" (click)="save()" *ngIf="editMode">Save</button>
+      <button class="buttons" (click)="cancel()" *ngIf="editMode">Cancel</button>
+    </div>
   </div>
-  <button *ngIf="isAnyEditMode()" (click)="updateImageInfo()">Update</button>
+</div>
+
+
+
+
+
+<div clas="footer" *ngIf="!!imageInfo">
+  <app-related-images-container [imageKey]="imageInfo.imageKey"></app-related-images-container>
 </div>

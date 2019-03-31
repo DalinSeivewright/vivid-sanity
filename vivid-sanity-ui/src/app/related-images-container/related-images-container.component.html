@@ -1,0 +1,8 @@
+<span class="label">Related Images</span>
+<div class="flex-container">
+  <div class="imageWrapper" *ngFor="let relatedImage of (relatedImages$ | async)">
+    <a [routerLink]="getRouterImageLink(relatedImage)">
+      <img class="imageSizing" [src]="relatedImage.thumbnailUri">
+    </a>
+  </div>
+</div>

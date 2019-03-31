@@ -1,8 +1,18 @@
-.imageContainer {
-    display: inline-block;
-    text-align: center;
-}
 
-.paletteContainer {
-    display: block;
-}
+/*.imageContainer {*/
+    /*display: inline-block;*/
+    /*flex-basis: 256px;*/
+/*}*/
+
+/*.paletteContainer {*/
+    /*display: block;*/
+    /*text-align:center;*/
+/*}*/
+
+/*.max {*/
+    /*flex-basis: 256px;*/
+    /*min-width: 256px;*/
+/*}*/
+
+
+

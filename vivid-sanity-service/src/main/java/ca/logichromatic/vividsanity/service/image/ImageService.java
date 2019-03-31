@@ -61,6 +61,11 @@ public class ImageService {
         return imageOperationService.getImageInfo(imageKey);
     }
 
+
+    public List<ImageInfoDto> getSimilarImages(String imageKey) {
+        return imageOperationService.getSimilarImages(imageKey);
+    }
+
     public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) throws IOException {
         String imageKey = generateUniqueId();
 
@@ -132,4 +137,5 @@ public class ImageService {
         // TODO Do something nicer here.
         throw new IllegalStateException();
     }
+
 }

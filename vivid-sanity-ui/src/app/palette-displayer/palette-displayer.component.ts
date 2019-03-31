@@ -17,7 +17,7 @@ export class PaletteDisplayerComponent implements OnChanges {
   ngOnChanges() {
     this.palettes.length = 0;
     if (this.paletteString) {
-      this.paletteString.split(";").forEach(palette => this.palettes[this.palettes.length] = palette);
+      this.paletteString.split(";").filter(palette => !!palette && ";" !== palette).forEach(palette => this.palettes[this.palettes.length] = palette);
     }
   }
 }

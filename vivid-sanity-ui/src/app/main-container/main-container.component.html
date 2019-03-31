@@ -1,22 +1,21 @@
 <div>
-  <div class="row">
-    <div class="col">Search</div>
-    <div class="col">
-      <div class="row">
+    <div>
+      <div>
+        <h2>Search</h2>
+      </div>
+      <div>
         <a [routerLink]="['/recent']">Recent</a>
-        <a *ngIf="showUploadLink" [routerLink]="['/upload']">Upload</a>
+        <a [routerLink]="['/upload']">Upload</a>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <span>Tags</span>
-      <app-tag-list-container [tags]="tags"></app-tag-list-container>
-    </div>
-    <div class="col-large">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-
 </div>
+<div class="container">
+    <div class="sidebar">
+        <h2>Tags</h2>
+        <app-tag-list-container [tags]="tags"></app-tag-list-container>
+    </div>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
+

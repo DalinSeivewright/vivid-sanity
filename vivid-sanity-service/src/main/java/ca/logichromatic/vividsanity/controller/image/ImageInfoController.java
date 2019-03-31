@@ -23,6 +23,12 @@ public class ImageInfoController {
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    @GetMapping("/similar/{imageKey}")
+    public List<ImageInfoDto> getSimilarImages(@PathVariable String imageKey) {
+        return imageService.getSimilarImages(imageKey);
+    }
+
+
     @GetMapping()
     public List<ImageInfoDto> getImages() {
         return imageService.getImages();
