@@ -13,8 +13,7 @@
 }
 
 .imageSizing {
-    max-width: 256px;
-    max-height: 256px;
+    min-width: 256px;
 }
 
 

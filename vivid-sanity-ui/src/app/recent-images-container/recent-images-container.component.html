@@ -1,4 +1,4 @@
-<span class="label">Recent Images</span>
+<h3>Recent Images</h3>
 <div class="flex-container">
   <div class="imageWrapper" *ngFor="let x of (recentImages$ | async)">
     <a [routerLink]="getRouterImageLink(x)"><img [src]="x.thumbnailUri"></a>

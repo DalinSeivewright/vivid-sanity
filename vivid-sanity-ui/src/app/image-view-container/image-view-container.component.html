@@ -1,6 +1,7 @@
+<h3>Image Details</h3>
 <div class="column-container" [formGroup]="formGroup" *ngIf="!!imageInfo">
   <div class="imageViewContainer">
-    <div class="palette">
+    <div>
       <a [href]="imageInfo.imageUri" target="_blank"><img class="image"  [src]="imageInfo.thumbnailUri"></a>
     </div>
     <div class="palette">
@@ -8,7 +9,6 @@
     </div>
   </div>
   <div class="imageDetailsContainer">
-    <h2>Details</h2>
     <div class="inputGroup">
       <label for="titleA">Title</label>
       <input [ngClass]="inputClass" id="titleA" formControlName="title" />
@@ -36,9 +36,6 @@
 </div>
 
 
-
-
-
-<div clas="footer" *ngIf="!!imageInfo">
+<div class="footer" *ngIf="!!imageInfo">
   <app-related-images-container [imageKey]="imageInfo.imageKey"></app-related-images-container>
 </div>

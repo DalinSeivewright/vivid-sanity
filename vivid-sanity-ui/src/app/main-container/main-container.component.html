@@ -1,21 +1,22 @@
 <div>
-    <div>
-      <div>
-        <h2>Search</h2>
-      </div>
-      <div>
-        <a [routerLink]="['/recent']">Recent</a>
-        <a [routerLink]="['/upload']">Upload</a>
-      </div>
+    <div class="container">
+        <div>
+          <div>
+            <h2>Search</h2>
+          </div>
+          <div class="content">
+            <app-header-links></app-header-links>
+          </div>
+        </div>
     </div>
-</div>
-<div class="container">
-    <div class="sidebar">
-        <h2>Tags</h2>
-        <app-tag-list-container [tags]="tags"></app-tag-list-container>
-    </div>
-    <div class="content">
-        <router-outlet></router-outlet>
+    <div class="container">
+        <!--<div class="sidebar">-->
+            <!--<h2>Tags</h2>-->
+            <!--<app-tag-list-container [tags]="tags"></app-tag-list-container>-->
+        <!--</div>-->
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
 

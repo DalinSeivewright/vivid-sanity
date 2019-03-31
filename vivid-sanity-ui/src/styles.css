@@ -23,6 +23,7 @@ h1, h2, h3, h4, h5, label {
     color: #d6b9a8;
 }
 
+
 .container {
     display: flex;
     margin-left: 4px;
@@ -30,8 +31,7 @@ h1, h2, h3, h4, h5, label {
 
 .sidebar {
     padding-left: 16px;
-    min-width: 100px;
-    width: 128px;
+    min-width: 256px;
 }
 
 .content {
@@ -45,12 +45,11 @@ h1, h2, h3, h4, h5, label {
 
 .image {
     min-width: 256px;
-    margin-top: 0.83em;
     font-size: 1.5em;
 }
 
 .imageViewContainer {
-    margin-left: 16px;
+    margin-right: 16px;
 }
 
 .disabled {
@@ -67,9 +66,11 @@ h1, h2, h3, h4, h5, label {
     margin-bottom: 4px;
 }
 
+.linkContainer {
+}
+
 
 .imageDetailsContainer {
-    margin-left: 16px;
     padding-left: 16px;
     padding-bottom: 16px;
     padding-right: 16px;
@@ -94,6 +95,35 @@ h1, h2, h3, h4, h5, label {
 .palette {
     text-align: center;
 }
+
+.link {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+.link:link {
+    text-decoration: none;
+    color: #688894;
+}
+
+.link:visited {
+    text-decoration: none;
+    color: #688894;
+}
+
+
+.link:hover {
+    text-decoration: none;
+    color: #655555;
+}
+
+
+.link:link {
+    text-decoration: none;
+    color: #688894;
+}
+
 
 .inputGroup {
     max-width: 90%;
@@ -122,10 +152,7 @@ h1, h2, h3, h4, h5, label {
 
 .footer {
     margin-top: 16px;
-    margin-left: 16px;
-    padding-left: 16px;
     padding-bottom: 16px;
     padding-right: 16px;
-    /*background-color: yellowgreen;*/
 }
 

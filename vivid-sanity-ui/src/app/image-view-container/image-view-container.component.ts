@@ -67,8 +67,10 @@ export class ImageViewContainerComponent implements OnDestroy {
   }
 
   public save(): void {
+    this.editMode = false;
     this.updateImageInfo();
     this.formGroup.disable();
+    this.refreshInfo(this.imageInfo.imageKey);
   }
 
   public cancel(): void {

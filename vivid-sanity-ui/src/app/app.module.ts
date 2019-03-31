@@ -21,6 +21,7 @@ import {FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
+import { HeaderLinksComponent } from './header-links/header-links.component';
 
 
 const appRoutes: Routes = [
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
     UploadImageContainerComponent,
     ImageViewContainerComponent,
     RelatedImagesContainerComponent,
+    HeaderLinksComponent,
   ],
   imports: [
     BrowserModule,
