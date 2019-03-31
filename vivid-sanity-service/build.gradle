@@ -22,12 +22,17 @@ dependencies {
 
 }
 
+
 bootJar {
     archiveName="${rootProject.name}-application.jar"
     from ("../${rootProject.name}-ui/dist") {
         into 'static'
         exclude "3rdpartylicenses.txt"
     }
+    exclude "application-**.properties"
+    exclude "liquibase-**.properties"
+    exclude "db/changelog/**"
+
 }
 
 task yarnIt(type: Exec) {
