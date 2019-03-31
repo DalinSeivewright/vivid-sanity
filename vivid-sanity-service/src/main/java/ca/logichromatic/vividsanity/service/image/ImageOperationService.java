@@ -139,7 +139,7 @@ public class ImageOperationService {
                 .secretKey(bucketProperties.getSecretKey())
                 .build();
         S3Client s3Client = S3Client.builder()
-                .region(Region.US_EAST_1)
+                .region(Region.of(bucketProperties.getRegion()))
                 .endpointOverride(targetEndpointOverride)
                 .credentialsProvider(new CustomAWSCredentialsProvider(customAWSCredentials))
                 .build();

@@ -53,3 +53,6 @@
 **/src/main/resources/liquibase-external.properties
 **/src/main/resources/application-public.properties
 **/src/main/resources/application-private.properties
+**/src/main/resources/application-aws.properties
+**/src/main/resources/liquibase-external-aws.properties
+

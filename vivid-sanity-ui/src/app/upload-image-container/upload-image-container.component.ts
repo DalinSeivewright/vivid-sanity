@@ -38,6 +38,7 @@ export class UploadImageContainerComponent {
 
   uploadFile() {
     this.imageService.uploadImage(this.file).subscribe((imageInfo: ImageInfoModel) => {
+      console.log("Triggering update.")
       this.imageService.updateImage(imageInfo.imageKey, this.getImageInfoUploadObject()).subscribe(response => {
         // TODO Turn this into events so we can trigger events and have components listen to them
         this.appInfoService.refreshInfo()
@@ -47,7 +48,8 @@ export class UploadImageContainerComponent {
   }
 
   getImageInfoUploadObject(): ImageInfoUpdateModel {
-    const tags: string[] = this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
+    const tagString: string = this.formGroup.get("tags").value == null ? "" : this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
+    const tags: string[] = tagString.replace(" ", "").split(",");
     const tagInfos: TagInfoModel[] = tags.map((tag) => {
       return {
         'name': tag,

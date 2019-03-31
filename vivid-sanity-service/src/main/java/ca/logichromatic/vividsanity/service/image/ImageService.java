@@ -50,7 +50,6 @@ public class ImageService {
     public static String THUMBNAIL_SUFFIX = "_thumb";
 
     public List<ImageInfoDto> getImages() {
-        log.error("I am the private bean!");
         return imageOperationService.getImages();
     }
 
@@ -82,7 +81,6 @@ public class ImageService {
         S3Client localS3Client = imageOperationService.buildClient(applicationProperties.getLocal().getBucket());
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));
-
         if (imageInfo.getVisibility() == VisiblityType.PUBLIC) {
             log.info("Visiblity public!");
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
@@ -98,6 +96,7 @@ public class ImageService {
             throw new ImageNotFoundException();
         }
         SpecialDatabaseAction databaseAction = SpecialDatabaseAction.NONE;
+        log.info(databaseAction.name());
         if (imageInfo.getVisibility() != imageInfoUpdate.getVisibility()) {
             if (imageInfo.getVisibility() == VisiblityType.PRIVATE && imageInfoUpdate.getVisibility() == VisiblityType.PUBLIC) {
                 databaseAction = SpecialDatabaseAction.ADD_TO_EXTERNAL;
@@ -105,9 +104,11 @@ public class ImageService {
                 databaseAction = SpecialDatabaseAction.REMOVE_FROM_EXTERNAL;
             }
         }
+        log.info("Determined DB Action");
+        log.info(databaseAction.name());
 
         imageInfo = imageInfoTransformer.toEntity(imageInfo, imageInfoUpdate);
-        imagePersistenceService.save(imageInfo, databaseAction);
+        ImageInfo updatedImageInfo = imagePersistenceService.save(imageInfo, databaseAction);
 
         if (databaseAction != SpecialDatabaseAction.NONE) {
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
@@ -123,7 +124,7 @@ public class ImageService {
                 imageOperationService.removeImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX);
             }
         }
-        return new ImageInfoDto();
+        return imageInfoTransformer.toDto(updatedImageInfo);
     }
 
     public String generateUniqueId() {

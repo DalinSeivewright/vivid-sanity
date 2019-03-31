@@ -22,6 +22,7 @@ public class ApplicationProperties {
     @Data
     public static class BucketProperties {
         private String uri;
+        private String region;
         private String bucketKey;
         private String accessKey;
         private String secretKey;

@@ -28,6 +28,7 @@ export class ImageService {
     }
 
     updateImage(imageKey: string, imageInfoUpdateModel: ImageInfoUpdateModel) {
+        console.log(imageInfoUpdateModel);
         return this.http.put<ImageInfoModel>(`./api/images/${imageKey}`, imageInfoUpdateModel);
     }
 }
