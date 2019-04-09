@@ -28,9 +28,13 @@
       </select>
     </div>
     <div *ngIf="adminFunctions">
-      <button class="buttons" (click)="edit()" *ngIf="!editMode">Edit</button>
+      <button class="buttons" (click)="enterEdit()" *ngIf="!specialMode">Edit</button>
       <button class="buttons" (click)="save()" *ngIf="editMode">Save</button>
       <button class="buttons" (click)="cancel()" *ngIf="editMode">Cancel</button>
+
+      <button class="buttons" (click)="enterDelete()" *ngIf="!specialMode">Delete</button>
+      <button class="buttons" (click)="confirmDelete()" *ngIf="deleteMode">Yes I am sure!</button>
+      <button class="buttons" (click)="cancelDelete()" *ngIf="deleteMode">Oops!  Cancel!</button>
     </div>
   </div>
 </div>

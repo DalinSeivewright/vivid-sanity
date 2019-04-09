@@ -31,6 +31,13 @@ public class ImagePersistenceService {
         return updatedImageInfo;
     }
 
+    public void delete(ImageInfo imageInfo, SpecialDatabaseAction databaseAction) {
+        localImageInfoRepository.delete(imageInfo);
+        if (databaseAction == SpecialDatabaseAction.REMOVE_FROM_EXTERNAL) {
+            externalImageInfoRepository.delete(imageInfo);
+        }
+    }
+
     public ImageInfo find(String imageKey) {
         return localImageInfoRepository.findByImageKey(imageKey);
     }

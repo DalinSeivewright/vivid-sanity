@@ -96,7 +96,6 @@ public class ImageService {
             throw new ImageNotFoundException();
         }
         SpecialDatabaseAction databaseAction = SpecialDatabaseAction.NONE;
-        log.info(databaseAction.name());
         if (imageInfo.getVisibility() != imageInfoUpdate.getVisibility()) {
             if (imageInfo.getVisibility() == VisiblityType.PRIVATE && imageInfoUpdate.getVisibility() == VisiblityType.PUBLIC) {
                 databaseAction = SpecialDatabaseAction.ADD_TO_EXTERNAL;
@@ -125,6 +124,25 @@ public class ImageService {
             }
         }
         return imageInfoTransformer.toDto(updatedImageInfo);
+    }
+
+    public void deleteImage(String imageKey) {
+        ImageInfo imageInfo = imagePersistenceService.find(imageKey);
+        if (imageInfo == null) {
+            throw new ImageNotFoundException();
+        }
+        SpecialDatabaseAction databaseAction = imageInfo.getVisibility() == VisiblityType.PRIVATE ? SpecialDatabaseAction.NONE : SpecialDatabaseAction.REMOVE_FROM_EXTERNAL;
+
+        S3Client localS3Client = imageOperationService.buildClient(applicationProperties.getLocal().getBucket());
+        imagePersistenceService.delete(imageInfo, databaseAction);
+        imageOperationService.removeImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey);
+        imageOperationService.removeImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX);
+        if (databaseAction == SpecialDatabaseAction.REMOVE_FROM_EXTERNAL) {
+            S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
+            log.info("Removing from External S3!");
+            imageOperationService.removeImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey);
+            imageOperationService.removeImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX);
+        }
     }
 
     public String generateUniqueId() {

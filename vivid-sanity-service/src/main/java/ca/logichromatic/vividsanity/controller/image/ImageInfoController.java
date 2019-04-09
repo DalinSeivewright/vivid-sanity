@@ -7,6 +7,7 @@ import ca.logichromatic.vividsanity.model.ImageInfoUpdate;
 import ca.logichromatic.vividsanity.model.ServerMode;
 import ca.logichromatic.vividsanity.service.image.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,5 +51,11 @@ public class ImageInfoController {
     @PutMapping("{imageKey}")
     public ImageInfoDto updateImageInfo(@PathVariable String imageKey, @RequestBody ImageInfoUpdate imageInfoUpdate) {
         return imageService.updateImage(imageKey, imageInfoUpdate);
+    }
+
+    @DeleteMapping("{imageKey}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteImageInfo(@PathVariable String imageKey) {
+        imageService.deleteImage(imageKey);
     }
 }

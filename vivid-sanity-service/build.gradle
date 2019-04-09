@@ -29,7 +29,8 @@ bootJar {
         into 'static'
         exclude "3rdpartylicenses.txt"
     }
-    exclude "application-**.properties"
+    exclude "application-public.properties"
+    exclude "application-private.properties"
     exclude "liquibase-**.properties"
     exclude "db/changelog/**"
 

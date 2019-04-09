@@ -48,7 +48,7 @@ export class UploadImageContainerComponent {
   }
 
   getImageInfoUploadObject(): ImageInfoUpdateModel {
-    const tagString: string = this.formGroup.get("tags").value == null ? "" : this.formGroup.get("tags").value.toString().replace(" ", "").split(",");
+    const tagString: string = this.formGroup.get("tags").value == null ? "" : this.formGroup.get("tags").value;
     const tags: string[] = tagString.replace(" ", "").split(",");
     const tagInfos: TagInfoModel[] = tags.map((tag) => {
       return {

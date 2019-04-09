@@ -27,6 +27,7 @@ export class ImageViewContainerComponent implements OnDestroy {
   appInfoSubscription: Subscription = Subscription.EMPTY;
 
   editMode: boolean = false;
+  deleteMode: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private imageService: ImageService,
@@ -62,7 +63,7 @@ export class ImageViewContainerComponent implements OnDestroy {
   }
 
 
-  public edit(): void {
+  public enterEdit(): void {
     this.editMode = true;
     this.formGroup.enable();
   }
@@ -80,6 +81,21 @@ export class ImageViewContainerComponent implements OnDestroy {
     this.refreshInfo(this.imageInfo.imageKey);
   }
 
+  public enterDelete(): void {
+    this.deleteMode = true;
+  }
+
+  public confirmDelete(): void {
+    this.deleteMode = false;
+    this.deleteImageInfo();
+  }
+
+  public cancelDelete(): void {
+    this.deleteMode = false;
+  }
+
+
+
   get inputClass() {
     if (this.editMode) {
       return "";
@@ -91,6 +107,12 @@ export class ImageViewContainerComponent implements OnDestroy {
     const imageInfoUpdate = this.getImageInfoUpdateObject();
     this.imageService.updateImage(this.imageInfo.imageKey, imageInfoUpdate).subscribe(() => {
       this.refreshInfo(this.imageInfo.imageKey);
+    });
+  }
+
+  deleteImageInfo() {
+    this.imageService.deleteImage(this.imageInfo.imageKey).subscribe(() => {
+      this.navigateRecent();
     });
   }
 
@@ -142,4 +164,8 @@ export class ImageViewContainerComponent implements OnDestroy {
       {value: VisibilityType.PUBLIC, description: "Public"}];
   }
 
+
+  get specialMode(): boolean {
+    return this.editMode || this.deleteMode;
+  }
 }
