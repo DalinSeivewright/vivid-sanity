@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { AppComponent } from './app.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {ImageService} from "./services/image.service";
 import {RecentImagesService} from "./recent-images-container/recent-images.service"
 import {AppInfoService} from "./services/app-info.service";
@@ -23,6 +23,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
 import { HeaderLinksComponent } from './header-links/header-links.component';
 import { SearchComponent } from './search/search.component';
+import {ErrorInterceptor} from "./util/error-interceptor";
 
 
 const appRoutes: Routes = [
@@ -32,7 +33,9 @@ const appRoutes: Routes = [
   { path: 'image/:imageKey', component: ImageViewContainerComponent },
   {path: '**', redirectTo: 'recent'}
 ];
-
+const httpInterceptors = [
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+];
 
 @NgModule({
   declarations: [
@@ -55,7 +58,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, {useHash: false}),
     FontAwesomeModule
   ],
-  providers: [ImageService, AppInfoService, RecentImagesService],
+  providers: [ImageService, AppInfoService, RecentImagesService, httpInterceptors],
   bootstrap: [AppComponent]
 })
 export class AppModule {
