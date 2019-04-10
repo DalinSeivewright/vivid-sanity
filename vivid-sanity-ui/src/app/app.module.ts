@@ -24,6 +24,9 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { HeaderLinksComponent } from './header-links/header-links.component';
 import { SearchComponent } from './search/search.component';
 
+import { FileDropModule } from 'ngx-file-drop';
+import { HeaderUploadComponent } from './header-upload/header-upload.component';
+
 
 const appRoutes: Routes = [
   { path: '', component: RecentImagesContainerComponent },
@@ -46,6 +49,7 @@ const appRoutes: Routes = [
     RelatedImagesContainerComponent,
     HeaderLinksComponent,
     SearchComponent,
+    HeaderUploadComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +57,9 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot(appRoutes, {useHash: false}),
-    FontAwesomeModule
+    FontAwesomeModule,
+    FileDropModule
+
   ],
   providers: [ImageService, AppInfoService, RecentImagesService],
   bootstrap: [AppComponent]

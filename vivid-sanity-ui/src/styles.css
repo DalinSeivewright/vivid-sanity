@@ -10,14 +10,19 @@ body {
     max-width: 80em;
 }
 
-
+.fileDrop {
+    width: 256px;
+    min-height: 64px;
+    border: 2px solid #d6b9a8;
+    border-radius: 10px;
+    text-align: center;
+}
 
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     color: #dad0ce;
-    background-color: #251621;
     font-family: 'Noto Sans', sans-serif;
 
 }
@@ -142,7 +147,6 @@ h1, h2, h3, h4, h5, label {
     color: #688894;
 }
 
-
 .inputGroup {
     max-width: 90%;
     margin-bottom: 8px;
@@ -164,8 +168,13 @@ h1, h2, h3, h4, h5, label {
     min-width: 128px;
 }
 
-.inputGroup label, textarea, input, span {
+button, input {
+    background-color: #251621;
+}
+
+.inputGroup label, .inputGroup textarea, .inputGroup input, .inputGroup span, .inputGroup button, .inputGroup select {
     display: block;
+    background-color: #251621;
 }
 
 .footer {

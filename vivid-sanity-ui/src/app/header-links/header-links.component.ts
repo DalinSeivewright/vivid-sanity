@@ -3,6 +3,7 @@ import {AppInfoModel} from "../model/app-info.model";
 import {ServerModeType} from "../model/server-mode.type";
 import {Subscription} from "rxjs";
 import {AppInfoService} from "../services/app-info.service";
+import {UploadEvent} from "ngx-file-drop";
 
 @Component({
   selector: 'app-header-links',
@@ -26,6 +27,7 @@ export class HeaderLinksComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
   }
+
 
 
 }
