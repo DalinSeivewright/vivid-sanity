@@ -6,7 +6,10 @@
 
 body {
     background-color: #251621;
+    margin: 0 auto;
+    max-width: 80em;
 }
+
 
 
 * {
