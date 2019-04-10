@@ -57,6 +57,13 @@ h1, h2, h3, h4, h5, label {
     font-size: 1.5em;
 }
 
+.imageWrap {
+    width: 256px;
+    height: 256px;
+    overflow: hidden;
+    text-align: center;
+}
+
 .imageViewContainer {
     margin-right: 16px;
 }
@@ -104,6 +111,7 @@ h1, h2, h3, h4, h5, label {
 
 .palette {
     text-align: center;
+    height: 32px;
 }
 
 .link {

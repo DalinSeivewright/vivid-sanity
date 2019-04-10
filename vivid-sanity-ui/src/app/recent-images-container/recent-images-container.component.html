@@ -1,7 +1,14 @@
 <h3>Recent Images</h3>
 <div class="flex-container">
-  <div class="imageWrapper" *ngFor="let x of (recentImages$ | async)">
-    <a [routerLink]="getRouterImageLink(x)"><img [src]="x.thumbnailUri"></a>
-  <!--<app-palette-displayer [paletteString]="x.palette"></app-palette-displayer>-->
+  <div class="imageViewContainer"
+       (mouseenter)="mouseEnter(imageInfo.imageKey)"
+       (mouseleave)="mouseLeave(imageInfo.imageKey)"
+       *ngFor="let imageInfo of (recentImages$ | async)">
+    <div class="imageWrap">
+      <a [routerLink]="getRouterImageLink(imageInfo)"><img [src]="imageInfo.thumbnailUri"></a>
+    </div>
+    <div class="palette">
+      <app-palette-displayer *ngIf="isInfoVisible(imageInfo.imageKey)" [paletteString]="imageInfo.palette"></app-palette-displayer>
+    </div>
   </div>
 </div>

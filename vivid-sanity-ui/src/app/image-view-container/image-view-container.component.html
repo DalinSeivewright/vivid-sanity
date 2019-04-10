@@ -1,7 +1,7 @@
 <h3>Image Details</h3>
 <div class="column-container" [formGroup]="formGroup" *ngIf="!!imageInfo">
   <div class="imageViewContainer">
-    <div>
+    <div class="imageWrap">
       <a [href]="imageInfo.imageUri" target="_blank"><img class="image"  [src]="imageInfo.thumbnailUri"></a>
     </div>
     <div class="palette">
