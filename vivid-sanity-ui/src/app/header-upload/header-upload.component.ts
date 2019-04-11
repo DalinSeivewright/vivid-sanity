@@ -3,6 +3,8 @@ import {FileSystemFileEntry, UploadEvent} from "ngx-file-drop";
 import {ImageInfoModel} from "../model/image-info.model";
 import {ImageService} from "../services/image.service";
 import {Subscription, timer} from "rxjs";
+import {UploadModel} from "../model/upload.model";
+import {UploadProgressModel} from "../model/upload-progress.model";
 
 @Component({
   selector: 'app-header-upload',
@@ -12,7 +14,9 @@ import {Subscription, timer} from "rxjs";
 export class HeaderUploadComponent implements OnInit, OnDestroy {
 
   constructor(private imageService: ImageService) { }
-  uploadedImages: Map<ImageInfoModel, Subscription> = new Map()
+  uploadedImages: Map<ImageInfoModel, Subscription> = new Map();
+
+  uploads: UploadModel[] = [];
   ngOnInit() {
   }
 
@@ -30,9 +34,18 @@ export class HeaderUploadComponent implements OnInit, OnDestroy {
         .map(uploadFile => (uploadFile.fileEntry as FileSystemFileEntry));
     files.forEach((fileEntry: FileSystemFileEntry) => {
       fileEntry.file( (file:File) => {
-        this.imageService.uploadImage(file).subscribe((imageInfo: ImageInfoModel) => {
-          this.addImageComplete(imageInfo);
+        const upload: UploadModel = this.imageService.uploadImageNew(this.uploads.length, file);
+        upload.uploadProgress.subscribe((test: UploadProgressModel) => {
+          console.log("Progress", test.progressIndex, test.progress);
         });
+        upload.uploadComplete.subscribe(( (test) => {
+          console.log("Complete");
+          console.log(test);
+        }));
+        this.uploads.push(upload);
+        // this.imageService.uploadImage(file).subscribe((imageInfo: ImageInfoModel) => {
+        //   this.addImageComplete(imageInfo);
+        // });
       })
     })
   }
