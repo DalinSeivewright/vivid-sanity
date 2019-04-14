@@ -2,7 +2,9 @@
   <file-drop dropZoneClassName="" browseBtnClassName="" contentClassName="" (onFileDrop)="fileDrop($event)">
     <span>Drop Images Here!</span>
     <div class="flex-container">
-      <img class="image-effect" [src]="imageInfo.thumbnailUri" width="48" height="48" *ngFor="let imageInfo of uploadedImages.keys()">
+      <div class="image-effect">
+        <span class="upload" [ngClass]="getUploadClass(uploadInfo)" *ngFor="let uploadInfo of currentUploads"></span>
+      </div>
     </div>
 
   </file-drop>

@@ -1,18 +1,11 @@
 import {Injectable} from "@angular/core";
-import {
-    HttpClient, HttpEvent,
-    HttpEventType,
-    HttpParams,
-    HttpProgressEvent,
-    HttpRequest,
-    HttpResponse
-} from "@angular/common/http";
-import {from, Observable, Observer, Subscriber} from "rxjs";
+import {HttpClient, HttpEvent, HttpEventType, HttpRequest, HttpResponse} from "@angular/common/http";
+import {Observable} from "rxjs";
 import {ImageInfoModel} from "../model/image-info.model";
 import {ImageInfoUpdateModel} from "../model/image-info-update.model";
+import {filter, map} from "rxjs/operators";
+import {UploadEventType} from "../model/upload-event.type";
 import {UploadModel} from "../model/upload.model";
-import {UploadProgressModel} from "../model/upload-progress.model";
-import {filter, map, mapTo, partition} from "rxjs/operators";
 
 
 @Injectable()
@@ -31,34 +24,31 @@ export class ImageService {
         return this.http.get<ImageInfoModel>(`./api/images/${imageKey}`);
     }
 
-    uploadImageNew(index: number, file: File): UploadModel {
+    uploadImageNew(index: number, file: File): Observable<UploadModel> {
         const formData: FormData = new FormData();
         formData.append("file", file, "file");
         const uploadRequest = new HttpRequest('POST', './api/images', formData, {
             reportProgress: true,
         });
-        const source = from(this.http.request(uploadRequest).pipe());
-        
-        const [progress, completed] = partition((event: HttpEvent<any>) => (event.type === HttpEventType.UploadProgress))(source);
-
-        const progressObservable = progress.pipe(map( (event: HttpProgressEvent) => {
-            return {
-                progress: Math.round(100 * event.loaded / event.total),
-                progressIndex: index
-            }
-        }));
-
-        const uploadedObservable = completed.pipe(filter(event => event.type === HttpEventType.Response))
-            .pipe(map( (event: HttpResponse<any>) => {
-            return event.body as ImageInfoModel;
-        }));
-
-        const uploadModel: UploadModel = {
-            uploadProgress: progressObservable,
-            uploadComplete: uploadedObservable
-        };
-        source.subscribe();
-        return uploadModel
+        return this.http.request(uploadRequest)
+            .pipe(filter(event => event.type === HttpEventType.Response || event.type === HttpEventType.UploadProgress))
+            .pipe(map((event: HttpEvent<ImageInfoModel>) => {
+                if (event.type === HttpEventType.UploadProgress) {
+                    return {
+                        type: UploadEventType.PROGRESS_UPDATE,
+                        index: index,
+                        progress: Math.round(100 * event.loaded / event.total),
+                        upload: null,
+                    }
+                }
+                const uploadedImage = (event as HttpResponse<ImageInfoModel>).body;
+                return {
+                    type: UploadEventType.COMPLETED,
+                    index: index,
+                    progress: null,
+                    upload: uploadedImage
+                };
+            }));
     }
 
     uploadImage(file: File): Observable<ImageInfoModel> {

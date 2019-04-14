@@ -66,6 +66,7 @@ public class ImageService {
     }
 
     public ImageInfoDto uploadImage(MultipartFile multipartFile, int byteSize) throws IOException {
+        log.info("Uploading!");
         String imageKey = generateUniqueId();
 
         BufferedImage originalImage = imageManipulationService.getImage(multipartFile.getInputStream());
@@ -82,7 +83,6 @@ public class ImageService {
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
         imageOperationService.uploadImage(localS3Client, applicationProperties.getLocal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));
         if (imageInfo.getVisibility() == VisiblityType.PUBLIC) {
-            log.info("Visiblity public!");
             S3Client externalS3Client = imageOperationService.buildClient(applicationProperties.getExternal().getBucket());
             imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey, ImageInputStream.create(originalImage));
             imageOperationService.uploadImage(externalS3Client, applicationProperties.getExternal().getBucket().getBucketKey(), imageKey + THUMBNAIL_SUFFIX, ImageInputStream.create(thumbnailImage));

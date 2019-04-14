@@ -12,7 +12,9 @@ body {
 
 .fileDrop {
     width: 256px;
+    height: 64px;
     min-height: 64px;
+    max-height: 64px;
     border: 2px solid #d6b9a8;
     border-radius: 10px;
     text-align: center;
@@ -32,8 +34,66 @@ h1, h2, h3, h4, h5, label {
 }
 
 .image-effect {
-    transition: opacity 4s ease-in-out;
+    height: 256px;
+    width: 256px;
 }
+
+.upload {
+    width: 256px;
+    height: 256px;
+    background-color: blue;
+    margin: 1px;
+    border: 1px solid rgba(0, 0, 0, .2);
+}
+.upload0 {
+    width: 0;
+}
+
+.upload10 {
+    width: 10%;
+}
+
+.upload20 {
+    width: 20%;
+}
+
+.upload30 {
+    width: 30%;
+}
+
+.upload40 {
+    width: 40%;
+}
+
+
+.upload50 {
+    width: 50%;
+}
+
+
+.upload60 {
+    width: 60%;
+}
+
+.upload70 {
+    width: 70%;
+}
+
+.upload80{
+    width: 80%;
+}
+
+
+.upload90 {
+    width: 90%;
+}
+
+
+.upload100 {
+    width: 100%;
+}
+
+
 
 .image-opacity {
     opacity: 0%;

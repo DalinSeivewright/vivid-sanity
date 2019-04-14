@@ -1,8 +1,9 @@
-import {Observable} from "rxjs";
 import {ImageInfoModel} from "./image-info.model";
-import {UploadProgressModel} from "./upload-progress.model";
+import {UploadEventType} from "./upload-event.type";
 
 export interface UploadModel {
-    uploadProgress: Observable<UploadProgressModel>;
-    uploadComplete: Observable<ImageInfoModel>;
+    index: number;
+    type: UploadEventType
+    progress: number;
+    upload: ImageInfoModel;
 }
