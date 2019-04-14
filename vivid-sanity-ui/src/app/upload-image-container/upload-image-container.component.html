@@ -1,30 +1,63 @@
 <h3>Upload Details</h3>
-
-<div class="column-container" [formGroup]="formGroup">
-  <div>
-    <div class="imageGroup">
+<div class="row-container" [formGroup]="formGroup">
+  <div class="column-container" >
+    <div class="inputGroup">
       <label for="file">Upload</label>
-      <input id="file" type="file" (change)="selectFile($event)">
+      <input id="file" type="file" multiple (change)="selectFiles($event)">
+      <button class="buttons" (click)="uploadFiles()">Upload</button>
     </div>
-    <div class="inputGroup">
-      <label for="title">Title</label>
-      <input id="title" formControlName="title" />
-    </div>
-    <div class="inputGroup">
-      <label for="description">Description</label>
-      <textarea id="description" spellcheck="false" formControlName="description"></textarea>
-    </div>
-    <div class="inputGroup">
-      <label for="tags">Tags</label>
-      <input formControlName="tags" id="tags" type="text" />
-    </div>
-    <div class="inputGroup">
-      <label for="visibility">Visibility</label>
-      <select id="visibility" formControlName="visibility">
-        <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
-      </select>
-    </div>
-    <button class="buttons" (click)="uploadFile()">Upload</button>
   </div>
+  <div class="inputGroup">
+    <file-drop dropZoneClassName="fileDrop" browseBtnClassName="" contentClassName="" (onFileDrop)="fileDrop($event)">
+      <div>Drop Images Here!</div>
+      <!--<div class="image-effect">-->
+      <!--<span class="upload" [ngClass]="getUploadClass(uploadInfo)" *ngFor="let uploadInfo of currentUploads"></span>-->
+      <!--</div>-->
+    </file-drop>
+  </div>
+  <div class="uploadDisplay">
+    <div class="row-container">
+      <div class="column-container" [formGroupName]="uploadModel.index.toString()" *ngFor="let uploadModel of currentUploads">
+        <div class="imageViewContainer">
+          <div class="image-effect">
+            <ng-container *ngIf="uploadModel.upload === null">
+              <div class="upload" [ngClass]="getUploadClass(uploadModel)"></div>
+            </ng-container>
+            <ng-container *ngIf="uploadModel.upload !== null">
+              <div class="imageWrap">
+              <a [href]="uploadModel.upload.imageUri" target="_blank"><img class="image"  [src]="uploadModel.upload.thumbnailUri"></a>
+              </div>
+              <div class="palette">
+              <app-palette-displayer [paletteString]="uploadModel.upload.palette"></app-palette-displayer>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div *ngIf="uploadModel.upload !== null" class="imageDetailsContainer">
+          <div class="inputGroup">
+            <label for="title">Title</label>
+            <input id="title" formControlName="title" />
+          </div>
+          <div class="inputGroup">
+            <label for="description">Description</label>
+            <textarea id="description" spellcheck="false" formControlName="description"></textarea>
+          </div>
+          <div class="inputGroup">
+            <label for="tags">Tags</label>
+            <input formControlName="tags" id="tags" type="text" />
+          </div>
+          <div class="inputGroup">
+            <label for="visibility">Visibility</label>
+            <select  id="visibility" formControlName="visibility">
+              <option *ngFor="let option of visibilityOptions" [value]="option.value">{{option.description}}</option>
+            </select>
+          </div>
+          <div *ngIf="adminFunctions">
+            <button class="buttons" (click)="save(uploadModel)">Save</button>
+            <button class="buttons" (click)="delete(uploadModel)">Delete</button>
+          </div>
+      </div>
+    </div>
+    </div>
 </div>
 
