@@ -73,7 +73,7 @@ export class UploadImageContainerComponent {
 
 
   selectFiles(event) {
-    this.files = event.target.files || [];
+    this.files = Array.from(event.target.files) || [];
   }
 
 
@@ -82,7 +82,7 @@ export class UploadImageContainerComponent {
         .filter(uploadFile => uploadFile.fileEntry.isFile)
         .map(uploadFile => (uploadFile.fileEntry as FileSystemFileEntry));
     files.forEach((fileEntry: FileSystemFileEntry) => {
-      fileEntry.file( (file:File) => {
+      fileEntry.file( (file: File) => {
         this.uploadFile(file);
       })
     })
@@ -125,6 +125,12 @@ export class UploadImageContainerComponent {
     });
   }
 
+  getCompletedClass(upload: UploadModel) {
+    if (upload.upload == null) {
+      return "progressUpload";
+    }
+    return "completedUpload";
+  }
 
   getUploadClass(upload: UploadModel) {
     if (upload.progress >= 100) {

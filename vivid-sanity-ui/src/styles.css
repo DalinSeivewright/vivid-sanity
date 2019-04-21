@@ -3,7 +3,9 @@
 
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
 
-
+.superSize {
+    font-size: 12px;
+}
 body {
     background-color: #251621;
     margin: 0 auto;
@@ -42,11 +44,27 @@ h1, h2, h3, h4, h5, label {
     width: 256px;
 }
 
+.progressUpload {
+    display: none;
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+/*.imageDetailsContainer:hover {*/
+    /*opacity: 0;*/
+    /*transition: opacity 1s ease-in-out;*/
+/*}*/
+
+.completedUpload {
+    display: block;
+    opacity: 100%;
+}
+
 .upload {
-    background-color: blue;
     margin: 1px;
     height: 100%;
-    border: 1px solid rgba(0, 0, 0, .2);
+    /*border: 1px solid rgba(0, 0, 0, .2);*/
+    overflow:hidden;
 }
 .upload0 {
     width: 0;

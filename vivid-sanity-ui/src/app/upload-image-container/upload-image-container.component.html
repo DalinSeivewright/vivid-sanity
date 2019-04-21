@@ -10,9 +10,6 @@
   <div class="inputGroup">
     <file-drop dropZoneClassName="fileDrop" browseBtnClassName="" contentClassName="" (onFileDrop)="fileDrop($event)">
       <div>Drop Images Here!</div>
-      <!--<div class="image-effect">-->
-      <!--<span class="upload" [ngClass]="getUploadClass(uploadInfo)" *ngFor="let uploadInfo of currentUploads"></span>-->
-      <!--</div>-->
     </file-drop>
   </div>
   <div class="uploadDisplay">
@@ -21,7 +18,16 @@
         <div class="imageViewContainer">
           <div class="image-effect">
             <ng-container *ngIf="uploadModel.upload === null">
-              <div class="upload" [ngClass]="getUploadClass(uploadModel)"></div>
+              <!--<div class="upload"  [ngClass]="getUploadClass(uploadModel)">-->
+              <!--<div class="upload">-->
+                <div class="imageWrap">
+                  <fa-icon  spin="true" size="10x" icon="spinner"></fa-icon>
+                </div>
+              <!--</div>-->
+              <div class="palette">
+                <span>{{uploadModel.progress}}%</span>
+                <!--<app-palette-displayer [paletteString]="'#ff0000;#ff0000;#ff0000;#ff0000;#ff0000;#ff0000;'"></app-palette-displayer>-->
+              </div>
             </ng-container>
             <ng-container *ngIf="uploadModel.upload !== null">
               <div class="imageWrap">
@@ -33,7 +39,7 @@
             </ng-container>
           </div>
         </div>
-        <div *ngIf="uploadModel.upload !== null" class="imageDetailsContainer">
+        <div [ngClass]="getCompletedClass(uploadModel)" *ngIf="uploadModel.upload !== null" class="imageDetailsContainer">
           <div class="inputGroup">
             <label for="title">Title</label>
             <input id="title" formControlName="title" />
@@ -56,8 +62,8 @@
             <button class="buttons" (click)="save(uploadModel)">Save</button>
             <button class="buttons" (click)="delete(uploadModel)">Delete</button>
           </div>
+        </div>
       </div>
     </div>
-    </div>
+  </div>
 </div>
-
