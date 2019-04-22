@@ -117,9 +117,9 @@ export class UploadImageContainerComponent {
   get currentUploads(): UploadModel[] {
     return Array.from(this.uploads.values()).sort( (a: UploadModel, b: UploadModel) => {
       if (a.index > b.index) {
-        return 1;
-      } else if (a.index < b.index) {
         return -1;
+      } else if (a.index < b.index) {
+        return 1;
       }
       return 0;
     });

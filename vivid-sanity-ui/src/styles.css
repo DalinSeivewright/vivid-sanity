@@ -21,6 +21,10 @@ body {
     display: block;
 }
 
+.fileDropWrapper {
+    margin-bottom: 24px !important;
+}
+
 .fileDrop > div {
     width: 256px;
     height: 64px;
@@ -254,7 +258,7 @@ h1, h2, h3, h4, h5, label {
 
 .inputGroup textarea {
     min-width: 100%;
-    min-height: 192px;
+    min-height: 128px;
 }
 
 .inputGroup select {
